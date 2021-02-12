@@ -2,8 +2,12 @@
 import os
 import pandas as pd
 
+# Create new exception
+class MissingStudyArea(Exception):
+    pass
 
-# Split Study_Area on - character and save as separate columns
+
+# Split Study_Area on - character and create separate columns
 def clean_area_col(parking):
     areas = parking['Study_Area'].str.split('-', expand = True)
     parking['Area'] = areas[0].str.strip()
