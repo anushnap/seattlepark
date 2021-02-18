@@ -1,10 +1,11 @@
 import unittest
 import os
+import pandas as pd
 import prep_data as prd
 
 class TestFilePrep(unittest.TestCase):
 
-    def test_raises_Missing_column(self):
+    def test_raises_Missing_Study_Area(self):
         filepath = os.getcwd()
 
         data = pd.read_csv(filepath + "/data/Annual_Parking_Study_Data.csv")
