@@ -1,2 +1,2 @@
-pandas
-os
+numpy @ file:///tmp/build/80754af9/numpy_and_numpy_base_1603570489231/work
+pandas @ file:///tmp/build/80754af9/pandas_1602088120436/work
