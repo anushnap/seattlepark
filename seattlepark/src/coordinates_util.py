@@ -2,11 +2,18 @@ import json
 from geopy import GoogleV3
 import haversine as hs
 from parking_spot import ParkingSpot
-
+import base64
 
 class CoordinatesUtil:
     coordinates_mapping = {}
     neighboring_streets_count = 20
+
+    def __init__(self):
+        with open("resources/google_map_api.key") as handle:
+            encoded_key_str = handle.read()
+            encoded_bytes = encoded_key_str.encode("ascii")  # make str into bytes, for encoding and decoding
+            decoded_bytes = base64.b64decode(encoded_bytes)
+            self.key = decoded_bytes.decode("ascii")
 
     def sea_parking_geocode(self):
         if self.coordinates_mapping and len(
@@ -62,7 +69,7 @@ class CoordinatesUtil:
             return top_spots
 
     def get_destination_coordinates(self, destination_address):
-        geo_locator = GoogleV3(api_key="AIzaSyCBosYo9S6UAXrTOK86_D6RVGLxQVnye3g")
+        geo_locator = GoogleV3(api_key=self.key)
         coordinates = geo_locator.geocode(destination_address).point
         print(coordinates)
         return [coordinates.latitude, coordinates.longitude]

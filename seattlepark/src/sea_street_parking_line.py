@@ -168,8 +168,8 @@ def submit_data(n_clicks, destination, accept_distance):
                         "lon": longs,
                         "hoverinfo": "text",
                         "mode": "lines",
-                        "text": f"<a href=\"https://www.google.com/maps/place/{spot.street_lat_mid},{spot.street_lon_mid}\" target=_blank>"
-                                + spot.street_name + f"</a> <br />Distance : {round(spot.calculated_distance, 2)} miles",
+                        "text": f"Address: <a href=\"https://www.google.com/maps/place/{spot.street_lat_mid},{spot.street_lon_mid}\" target=_blank>"
+                                + spot.street_name + f"</a> <br />Distance: {round(spot.calculated_distance, 2)} miles",
                         "marker": {
                             "size": 4,
                             "color": "green"
@@ -178,6 +178,8 @@ def submit_data(n_clicks, destination, accept_distance):
                             "bgcolor": "white",
                             "font_size": 10
                         },
+                        "showlegend": False,
+
                         "visible": True
                     }
                 )
