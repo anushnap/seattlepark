@@ -2,7 +2,7 @@
 # this function imports the dataset, takes slice parameters, and returns a sliced dataframe
 import pandas as pd
 import numpy as np
-
+import os
 
 class InvalidAreaError(Exception):
     pass
@@ -49,8 +49,10 @@ def slice_df(nhood, daytype, hour):
     if daytype.lower() not in valid_daytypes:
         raise InvalidDayTypeError("The specified day type is not recognized")
 
+
+    filepath = os.path.join(os.path.dirname(__file__), "data/Annual_Parking_Study_Data_Cleaned2.csv")
     # Import the dataset
-    df = pd.read_csv('data/Annual_Parking_Study_Data_Cleaned2.csv', low_memory=False)
+    df = pd.read_csv(filepath, low_memory=False)
 
     nhood_slicer = df['Neighborhood'] == nhood
     hour_slicer = df['Hour'] == hour
