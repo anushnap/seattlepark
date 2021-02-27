@@ -16,12 +16,27 @@ class NoSearchResultsError(Exception):
     pass
 
 
+class InvalidTimeError(Exception):
+    pass
+
 def slice_df(nhood, daytype, hour):
     # nhood: name of a neighborhood (might replace with lat/long later)
     # daytype: weekday, weekend, or any
     # hour: 0-23
 
     # check for valid inputs
+    valid_daytypes = ['weekday', 'weekend', 'any']
+    if not isinstance(daytype, str):
+        raise InvalidDayTypeError("The specified day type must be a string")
+    elif daytype.lower() not in valid_daytypes:
+        raise InvalidDayTypeError("The specified day type must be weekday, weekend, or any")
+
+    if (hour not in range(0, 24)):
+        raise InvalidTimeError("The specified hour must be between 0 and 23")
+    elif (not isinstance(hour, int)):
+        raise InvalidTimeError("The specified hour must be an integer")
+
+
     valid_neighborhoods = ['12th Ave', '15th Ave', 'Ballard', 'Belltown',
                            'Capitol Hill', 'Cherry Hill', 'Chinatown', 'Columbia City',
                            'Commercial Core', 'Denny Triangle', 'First Hill',
@@ -44,11 +59,6 @@ def slice_df(nhood, daytype, hour):
     # raise an exception if nhood was not found in the valid inputs list
     if not nhood_in_list:
         raise InvalidAreaError("The specified neighborhood is not recognized")
-
-    valid_daytypes = ['weekday', 'weekend', 'any']
-    if daytype.lower() not in valid_daytypes:
-        raise InvalidDayTypeError("The specified day type is not recognized")
-
 
     filepath = os.path.join(os.path.dirname(__file__), "data/Annual_Parking_Study_Data_Cleaned2.csv")
     # Import the dataset
