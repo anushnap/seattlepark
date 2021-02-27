@@ -19,7 +19,10 @@ class TestDataSlice(unittest.TestCase):
         self.assertRaises(slc.InvalidTimeError, slc.slice_df, 'Ballard', 'any', 0.0)
 
     def test_raises_No_Search_Results_Exception(self):
-        pass
+        self.assertRaises(slc.NoSearchResultsError, slc.slice_df, '12th Ave', 'any', 3)
+        self.assertRaises(slc.NoSearchResultsError, slc.slice_df, '12th Ave', 'any', 4)
+        self.assertRaises(slc.NoSearchResultsError, slc.slice_df, '12th Ave', 'any', 5)
+        self.assertRaises(slc.NoSearchResultsError, slc.slice_df, '12th Ave', 'any', 6)
 
 
 if __name__ == "__main__":
