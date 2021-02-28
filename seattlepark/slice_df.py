@@ -19,6 +19,7 @@ class NoSearchResultsError(Exception):
 class InvalidTimeError(Exception):
     pass
 
+
 def slice_df(nhood, daytype, hour):
     # nhood: name of a neighborhood (might replace with lat/long later)
     # daytype: weekday, weekend, or any
