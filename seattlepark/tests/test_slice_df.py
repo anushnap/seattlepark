@@ -2,7 +2,7 @@ import unittest
 import os
 import pandas as pd
 from pandas.util.testing import assert_frame_equal # <-- for testing dataframes
-import seattlepark.slice_df as slc
+from seattlepark import slice_df as slc
 
 class TestDataSlice(unittest.TestCase):
 
