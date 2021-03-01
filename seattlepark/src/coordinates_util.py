@@ -21,23 +21,23 @@ class CoordinatesUtil:
             return self.coordinates_mapping
         else:
             with open(
-                    'Seattle_Streets_InParkingStudy.geojson') as json_data:
+                    'resources/Midpoints_and_LineCoords.json') as json_data:
                 seattle_data = json.load(json_data)
                 features = seattle_data["features"]
                 for feature in features:
                     properties = feature["properties"]
                     geometry = feature["geometry"]
                     coordinates = geometry["coordinates"]
-                    address = properties["STNAME_ORD"].title() + " Between " + properties["XSTRLO"].title() + " and " + \
-                              properties["XSTRHI"].title()  # How about using geo_locator.geocode.reverse()???
+                    mid_point = geometry["midpoint"]
+                    address = properties["UNITDESC"].title() # How about using geo_locator.geocode.reverse()???
                     lat_start = coordinates[0][1]
                     lat_end = coordinates[1][1]
                     log_start = coordinates[0][0]
                     log_end = coordinates[1][0]
                     line_latitudes = [lat_start, lat_end]
                     line_longitudes = [log_start, log_end]
-                    dot_mid_street_lat = (lat_start + lat_end) / 2
-                    dot_mid_street_log = (log_start + log_end) / 2
+                    dot_mid_street_lat = mid_point[1]
+                    dot_mid_street_log = mid_point[0]
                     self.coordinates_mapping[address] = [[line_latitudes, line_longitudes],
                                                          [dot_mid_street_lat, dot_mid_street_log]]
 
@@ -47,7 +47,7 @@ class CoordinatesUtil:
         # return the coordinate of the user destination
         destination_coordinates = self.get_destination_coordinates(destination_address)
 
-        distance = int(acceptable_distance)
+        distance = float(acceptable_distance)
         destination_coordinates = self.get_destination_coordinates(destination_address)
         street_meet_expect = []
         for street in self.sea_parking_geocode():

@@ -13,11 +13,12 @@
 # street_lat_mid: the latitude of the middle point of this street.
 # street_lon_mid: the longitude of the middle point of this street.
 class ParkingSpot:
-    def __init__(self, distance, coordinates, street_name, street_lat_mid, street_lon_mid):
+    def __init__(self, distance, coordinates, street_name, street_lat_mid, street_lon_mid, spaces_available):
         self.calculated_distance = distance
         self.street_meet_expect_coordinates = coordinates
         self.street_name = street_name
         self.street_lat_mid = street_lat_mid
         self.street_lon_mid = street_lon_mid
+        self.spaceavail = 0
 
 
