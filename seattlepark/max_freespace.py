@@ -12,11 +12,13 @@ def max_freespace(df):
     # Loop through blocks and calculate average # of free spaces
     free_spaces = np.ndarray((len(blockfaces), ))
     for i, block in enumerate(blockfaces):
-        this_block = df[df['Block_And_Side'] == block]
-        num_obs = df.shape[0]
-        free_spaces[i] = df['Free_Spaces'].sum() / num_obs
-
+        this_block = df[df['Block_And_Side'] == block] # Why isn't this variable used? Is this meant to be used instead of df in this loop?
+        num_obs = this_block.shape[0]
+        free_spaces[i] = this_block['Free_Spaces'].sum() / num_obs # Use num_obs instead of sum of total parking spots?
+        
     max_spaces = np.max(free_spaces)
     k = np.argmax(free_spaces)
     best_block = blockfaces[k]
+    
+
     return best_block, max_spaces
