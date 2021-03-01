@@ -85,7 +85,6 @@ app.layout = html.Div(children=[
                     type='text',
                     placeholder="Destination?".format("text"),
                     debounce=True,
-                    # pattern=r"[0-9].[0-9]*",  # Regex: string must start with letters only
                     # spellCheck=True,
                     autoComplete="on",
                     inputMode='latin',
@@ -99,6 +98,7 @@ app.layout = html.Div(children=[
                     type='text',
                     # value=0.5,
                     placeholder="Acceptable Distance (mi)".format("text"),
+                    pattern=r"^[0-9]\d*(\.\d+)?$",  # Regex: checks for integer, decimal.
                     debounce=True,
                     autoComplete="on",
                     inputMode='latin',
