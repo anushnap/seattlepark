@@ -166,14 +166,15 @@ def submit_data(n_clicks, destination, accept_distance):
                         "type": "scattermapbox",
                         "lat": lats,
                         "lon": longs,
-                        "hoverinfo": "text",
+                        # "hoverinfo": "text",
                         "mode": "lines",
-                        "text": f"Address: <a href=\"https://www.google.com/maps/place/{spot.street_lat_mid},{spot.street_lon_mid}\" target=_blank>"
-                                + spot.street_name + f"</a> <br />Distance: {round(spot.calculated_distance, 2)} miles",
+                        # "text": f"Address: <a href=\"https://www.google.com/maps/place/{spot.street_lat_mid},{spot.street_lon_mid}\" target=_blank>"
+                        #         + spot.street_name + f"</a> <br />Distance: {round(spot.calculated_distance, 2)} miles",
                         "marker": {
                             "size": 4,
                             "color": "green"
                         },
+                        "hovertemplate": f"{street_details}<br /><html><body><img src=\"https://www.w3schools.com/html/img_girl.jpg\"></body></html><extra></extra>",
                         "hoverlabel": {
                             "bgcolor": "white",
                             "font_size": 10

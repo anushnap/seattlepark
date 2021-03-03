@@ -29,7 +29,7 @@ class CoordinatesUtil:
                     geometry = feature["geometry"]
                     coordinates = geometry["coordinates"]
                     mid_point = geometry["midpoint"]
-                    address = properties["UNITDESC"].title() # How about using geo_locator.geocode.reverse()???
+                    address = properties["UNITDESC"] # How about using geo_locator.geocode.reverse()???
                     lat_start = coordinates[0][1]
                     lat_end = coordinates[1][1]
                     log_start = coordinates[0][0]
