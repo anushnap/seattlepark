@@ -1,12 +1,14 @@
 import json
 from geopy import GoogleV3
 import haversine as hs
+
+from parking_recommender import ParkingRecommender
 from parking_spot import ParkingSpot
 import base64
+import datetime
 
 class CoordinatesUtil:
     coordinates_mapping = {}
-    neighboring_streets_count = 20
 
     def __init__(self):
         with open("resources/google_map_api.key") as handle:
@@ -45,8 +47,6 @@ class CoordinatesUtil:
 
     def get_parking_spots(self, destination_address, acceptable_distance):
         # return the coordinate of the user destination
-        destination_coordinates = self.get_destination_coordinates(destination_address)
-
         distance = float(acceptable_distance)
         destination_coordinates = self.get_destination_coordinates(destination_address)
         street_meet_expect = []
@@ -62,11 +62,13 @@ class CoordinatesUtil:
                 street_meet_expect.append(ps)
 
         if len(street_meet_expect) == 0:
-            return []
+            return [], None
         else:
-            street_meet_expect.sort(key=lambda point: point.calculated_distance)
-            top_spots = street_meet_expect[0:self.neighboring_streets_count]
-            return top_spots
+            #street_meet_expect.sort(key=lambda point: point.calculated_distance)
+            current_utc_time = datetime.datetime.now()
+            pr = ParkingRecommender(street_meet_expect, current_utc_time)
+            recommended_spots = pr.max_freespace()
+            return recommended_spots, destination_coordinates
 
     def get_destination_coordinates(self, destination_address):
         geo_locator = GoogleV3(api_key=self.key)
