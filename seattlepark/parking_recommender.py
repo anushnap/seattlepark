@@ -25,6 +25,10 @@ import pandas as pd
 import os
 
 
+class NoParkingSpotsInListError(Exception):
+    pass
+
+
 class NoSearchResultsError(Exception):
     pass
 
@@ -39,6 +43,9 @@ class ParkingRecommender:
         # datetimestr is the user's requested date/time for parking data (computer time at time request is made?)
         self.initial_list = parkingspotlist
 
+        if len(self.initial_list) == 0:
+            raise NoParkingSpotsInListError('No streets were passed to the recommender')  # empty list
+
         # extract weekday and hour from datetimestr and store them as object attributes
         datetime = pd.to_datetime(datetimestr)
         self.hr = datetime.hour
@@ -51,14 +58,16 @@ class ParkingRecommender:
 
     def slice_df(self):
         """Import the Parking Study dataset and filter it down to the streets contained in parkingspotlist"""
-        filepath = os.path.join(os.path.dirname(__file__), "data/Annual_Parking_Study_Data_Cleaned2.csv")
-        # Import the dataset
-        df = pd.read_csv(filepath, low_memory=False)
-
         # Extract street names from list of ParkingSpot objects
         street_names = []
         for st in self.initial_list:
             street_names.append(st.street_name)
+
+        # Before we even import anything, make sure
+
+        filepath = os.path.join(os.path.dirname(__file__), "data/Annual_Parking_Study_Data_Cleaned2.csv")
+        # Import the dataset
+        df = pd.read_csv(filepath, low_memory=False)
 
         # check if all the requested street names are in the database
         unitdescs = df['Unitdesc'].unique()  # list of unique streets in database
@@ -74,10 +83,11 @@ class ParkingRecommender:
         else:
             return df_sliced
 
-    def max_freespace(self):
-        """Returns the 5 parking spots with the highest estimated number of available spaces"""
+    def max_freespace(self, num_returns=5):
+        """Returns a num_returns-length list of parking spots with the highest estimated number of available spaces"""
         # List of unique streets in initial_df
         streets = self.initial_df['Unitdesc'].unique()
+        num_streets = len(streets)
         # initialize a list to keep track of free spaces on each street
         free_spaces = np.zeros((len(streets),))
         # loop through each street and calculate free spaces
@@ -92,13 +102,17 @@ class ParkingRecommender:
                 # filter to just this side
                 this_side = this_street[this_street['Side'] == side]
                 num_obs = this_side.shape[0]
-                # This calculation gives "free spaces per observation," an estimate of how many spaces are available
-                avg_freespace = this_side['Free_Spaces'].sum() / num_obs
-                # debugging print
-                # print('%s side of %s has %d obs and avg %4.1f spaces' % (side, street, num_obs, avg_freespace))
-                # Add the average free spaces on this side to free_spaces
-                # Eventually free_spaces[i] will have the total number of free spaces, on both sides of the street
-                free_spaces[i] += avg_freespace
+                if num_obs > 0:
+                    # If there aren't any observations for this street, that's fine. It just falls out of contention.
+                    # We know that other streets have observations, since the dataframe isn't empty.
+
+                    # This calculation gives "free spaces per observation," an estimate of how many spaces are available
+                    avg_freespace = this_side['Free_Spaces'].mean()
+                    # debugging print
+                    # print('%s side of %s has %d obs and avg %4.1f spaces' % (side, street, num_obs, avg_freespace))
+                    # Add the average free spaces on this side to free_spaces
+                    # Eventually free_spaces[i] will have the total number of free spaces, on both sides of the street
+                    free_spaces[i] += avg_freespace
 
         # Now we have a list of streets, with a corresponding list of the estimated number of available spaces
         # Sort the list of freespaces and return the sorted index, so we can also sort the list of streets
@@ -106,9 +120,10 @@ class ParkingRecommender:
         free_spaces_sorted = free_spaces[sort_index]
         streets_sorted = streets[sort_index]
         # The sort is in ascending order, so take the last 5 entries.
-        n_entries = -5
-        streets_select = streets_sorted[n_entries:]
-        free_spaces_select = free_spaces_sorted[n_entries:]
+        # if there are fewer than 5 streets in initial_list, just return all of them
+        n_entries = min(num_streets, num_returns)
+        streets_select = streets_sorted[-n_entries:]
+        free_spaces_select = free_spaces_sorted[-n_entries:]
 
         # Now, downselect the list of ParkingSpots to just the the ones we've selected
         output_list = []
@@ -123,7 +138,7 @@ class ParkingRecommender:
                     break  # no need to continue searching for "select" after finding it
 
         # some debugging print statements
-        # for i in range(len(output_list)):
-        #     print('%s: %4.1f spaces' % (output_list[i].street_name, output_list[i].spaceavail))
+        for i in range(len(output_list)):
+            print('%s: %4.1f spaces' % (output_list[i].street_name, output_list[i].spaceavail))
 
         return output_list
