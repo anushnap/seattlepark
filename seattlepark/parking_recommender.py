@@ -56,6 +56,7 @@ class ParkingRecommender:
         # Run the slice_df function to filter the database immediately
         self.initial_df = self.slice_df()  # dataframe corresponding to the spots in initial_list
 
+
     def slice_df(self):
         """Import the Parking Study dataset and filter it down to the streets contained in parkingspotlist"""
         # Extract street names from list of ParkingSpot objects
@@ -82,6 +83,7 @@ class ParkingRecommender:
             raise NoSearchResultsError('The specified filter returned no data')
         else:
             return df_sliced
+
 
     def max_freespace(self, num_returns=5):
         """Returns a num_returns-length list of parking spots with the highest estimated number of available spaces"""
