@@ -1,6 +1,7 @@
 import unittest
 import os
 import pandas as pd
+from dateutil.parser._parser import ParserError
 #import sys
 #from pandas.util.testing import assert_frame_equal # <-- for testing dataframes
 
@@ -15,6 +16,21 @@ class TestRecommenderInit(unittest.TestCase):
         """ParkingSpot list is empty"""
         with self.assertRaises(NoParkingSpotsInListError):
             pr_obj = ParkingRecommender([], '2020-02-04 12:46:29.315237')
+
+    def test_raises_TypeError(self):
+        """ParkingSpot is passed invalid datetime format"""
+        ps = [
+            ParkingSpot(0, 0, '1ST AVE BETWEEN SENECA ST AND UNIVERSITY ST', 0, 0)
+            ]
+        with self.assertRaises((TypeError, ParserError)):
+            pr_obj = ParkingRecommender(ps, 'Invalid datetime string')
+        
+        with self.assertRaises((TypeError, ValueError)):
+            pr_obj = ParkingRecommender(ps, '-1')
+
+        with self.assertRaises((TypeError, NoSearchResultsError)):
+            pr_obj = ParkingRecommender(ps, -1)
+
 
 
 class TestDataSlice(unittest.TestCase):
