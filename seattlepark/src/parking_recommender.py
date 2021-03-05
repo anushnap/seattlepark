@@ -53,21 +53,22 @@ class ParkingRecommender:
         self.initial_list = parkingspotlist
 
         if len(self.initial_list) == 0:
-            raise NoParkingSpotsInListError('No streets were passed to the recommender')
+            raise NoParkingSpotsInListError(
+                'No streets were passed to the recommender'
+            )
 
-        # extract weekday & hour from datetimestr & store as object attributes
+        # extract hour from datetimestr & store as object attribute
         datetime = pd.to_datetime(datetimestr)
         self.hr = datetime.hour
         # debugging print statement
         # print('Detected Hour: %d' % self.hr)
-        # self.wkday = datetime.dayofweek
 
-        # Run the slice_df function to filter the database immediately
-        self.initial_df = self.slice_df()  # dataframe corresponding to initial_list
+        # Run the slice_df function to filter the database immediately by streets
+        self.initial_df = self.slice_by_street()
 
-
-    def slice_df(self):
-        """Import the Parking Study dataset and filter it down to the streets
+    def slice_by_street(self):
+        """
+        Import the Parking Study dataset and filter it down to the streets
         contained in parkingspotlist
         """
         # Extract street names from list of ParkingSpot objects
@@ -75,38 +76,77 @@ class ParkingRecommender:
         for st in self.initial_list:
             street_names.append(st.street_name)
 
-        # Before we even import anything, make sure
+        filepath = os.path.join(
+            os.path.dirname(__file__),
+            "../data/Annual_Parking_Study_Data_Cleaned2.csv"
+            )
 
-        filepath = os.path.join(os.path.dirname(__file__), "data/Annual_Parking_Study_Data_Cleaned2.csv")
         # Import the dataset
         df = pd.read_csv(filepath, low_memory=False)
 
         # check if all the requested street names are in the database
-        unitdescs = df['Unitdesc'].unique()  # list of unique streets in database
+        unitdescs = df['Unitdesc'].unique()
         for name in street_names:
             if name not in unitdescs:
-                raise InvalidStreetError('Street %s not found in Parking Study database' % name)
+                raise InvalidStreetError(
+                    'Street %s not found in Parking Study database' % name
+                )
 
-        df_sliced = df[df['Unitdesc'].isin(street_names) & (df['Hour'] == self.hr)]
+        # slice to streets in the list (hour slicing moved to max_freespace)
+        df_sliced = df[df['Unitdesc'].isin(street_names)]
+        return df_sliced
 
-        # check if resulting slice has anything in it
-        if df_sliced.shape[0] == 0:
-            raise NoSearchResultsError('The specified filter returned no data')
+    def slice_by_hour(self, req_hr):
+        """
+        Slice initial_df to the requested hour, return further sliced df
+        """
+        # filter initial_df down to the requested hour
+        df_this_hour = self.initial_df[self.initial_df['Hour'] == req_hr]
+
+        # check if there were any results
+        if df_this_hour.shape[0] == 0:
+            # no observations at specified hour, try one hour later
+            if req_hr < 23:
+                new_hr = req_hr + 1
+            else:  # there is no hour 24, wraps around to 0
+                new_hr = 0
+            df_this_hour = self.initial_df[self.initial_df['Hour'] == new_hr]
+
+        # check again to see if that worked
+        if df_this_hour.shape[0] == 0:
+            # still no observations, try one hour earlier
+            if req_hr > 0:
+                new_hr = req_hr - 1
+            else:  # there is no hour -1, wraps around to 23
+                new_hr = 23
+            df_this_hour = self.initial_df[self.initial_df['Hour'] == new_hr]
+
+        # check again to see if that worked
+        if df_this_hour.shape[0] == 0:
+            # still no observations, raise an error that we can catch
+            raise NoSearchResultsError
         else:
-            return df_sliced
+            return df_this_hour
 
+    def max_freespace(self):
+        """
+        Return a list of (streetname, # available spaces)
+        tuples for every street in initial_list
+        """
+        try:
+            df2 = self.slice_by_hour(self.hr)
+        except NoSearchResultsError:
+            raise NoSearchResultsError
 
-    def max_freespace(self, num_returns=5):
-        """Returns a num_returns-length list of parking spots with the highest estimated number of available spaces"""
         # List of unique streets in initial_df
-        streets = self.initial_df['Unitdesc'].unique()
+        streets = df2['Unitdesc'].unique()
         num_streets = len(streets)
         # initialize a list to keep track of free spaces on each street
         free_spaces = np.zeros((len(streets),))
         # loop through each street and calculate free spaces
         for i, street in enumerate(streets):
             # filter the df to list observations from street (unitdesc) i only
-            this_street = self.initial_df[self.initial_df['Unitdesc'] == street]
+            this_street = df2[df2['Unitdesc'] == street]
 
             # how many sides does this street have? At most 2
             sides = this_street['Side'].unique()
@@ -155,3 +195,7 @@ class ParkingRecommender:
             print('%s: %4.1f spaces' % (output_list[i].street_name, output_list[i].spaceavail))
 
         return output_list
+
+    def recommend(self, num_returns=5):
+        """Returns a num_returns-length list of parking spots with the highest estimated number of available spaces"""
+        pass
