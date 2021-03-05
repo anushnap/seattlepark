@@ -1,15 +1,19 @@
 # Class ParkingRecommender
-# This class defines a ParkingRecommender object that is initialized with a list of ParkingSpot objects and a datetime
-# (as a string), which are stored as class attributes.
+# This class defines a ParkingRecommender object that is initialized with a 
+# list of ParkingSpot objects and a datetime (as a string), which are stored
+# as class attributes.
 
 # IMPORTANT NOTE!!!!
-# This replaces the slice_df.py, max_freespace.py, and where_to_park.py modules! So don't use those anymore.
+# This replaces the slice_df.py, max_freespace.py, and where_to_park.py 
+# modules! So don't use those anymore.
 
-# The __init__ method is the constructor of the ParkingRecommender object and parses the datetime input and filters
-# the full parking study dataset down to just the streets in the ParkingSpot list, using method slice_df().
+# The __init__ method is the constructor of the ParkingRecommender object 
+# and parses the datetime input and filters the full parking study dataset 
+# down to just the streets in the ParkingSpot list, using method slice_df().
 
-# The max_freespace method uses that filtered dataset and returns the 5 streets with the highest estimated parking
-# availability, based on average observed availability from the parking study data.
+# The max_freespace method uses that filtered dataset and returns the 5 
+# streets with the highest estimated parking availability, based on average
+# observed availability from the parking study data.
 
 # Use this method as follows:
 
@@ -17,7 +21,8 @@
 # "dt" is a datetime string such as '2020-02-04 12:46:29.315237'
 # pr = ParkingRecommender(ps,dt)
 # output = pr.max_freespace()
-# Here, output is a list of 5 ParkingSpot objects, with their .spaceavail attributes filled in.
+# Here, output is a list of 5 ParkingSpot objects, with their .spaceavail 
+# attributes filled in.
 
 
 import numpy as np
@@ -39,14 +44,18 @@ class InvalidStreetError(Exception):
 
 class ParkingRecommender:
     def __init__(self, parkingspotlist, datetimestr):
-        # parkingspotlist is a List object containing ParkingSpot objects, the output of the coordinates_util module.
-        # datetimestr is the user's requested date/time for parking data (computer time at time request is made?)
+        """
+        parkingspotlist is a List object containing ParkingSpot objects, the
+        output of the coordinates_util module.
+        datetimestr is the user's requested date/time for parking data 
+        (computer time at time request is made?)
+        """
         self.initial_list = parkingspotlist
 
         if len(self.initial_list) == 0:
-            raise NoParkingSpotsInListError('No streets were passed to the recommender')  # empty list
+            raise NoParkingSpotsInListError('No streets were passed to the recommender')
 
-        # extract weekday and hour from datetimestr and store them as object attributes
+        # extract weekday & hour from datetimestr & store as object attributes
         datetime = pd.to_datetime(datetimestr)
         self.hr = datetime.hour
         # debugging print statement
@@ -54,10 +63,13 @@ class ParkingRecommender:
         # self.wkday = datetime.dayofweek
 
         # Run the slice_df function to filter the database immediately
-        self.initial_df = self.slice_df()  # dataframe corresponding to the spots in initial_list
+        self.initial_df = self.slice_df()  # dataframe corresponding to initial_list
+
 
     def slice_df(self):
-        """Import the Parking Study dataset and filter it down to the streets contained in parkingspotlist"""
+        """Import the Parking Study dataset and filter it down to the streets
+        contained in parkingspotlist
+        """
         # Extract street names from list of ParkingSpot objects
         street_names = []
         for st in self.initial_list:
@@ -82,6 +94,7 @@ class ParkingRecommender:
             raise NoSearchResultsError('The specified filter returned no data')
         else:
             return df_sliced
+
 
     def max_freespace(self, num_returns=5):
         """Returns a num_returns-length list of parking spots with the highest estimated number of available spaces"""

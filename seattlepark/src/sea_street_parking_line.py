@@ -156,24 +156,26 @@ def submit_data(n_clicks, destination, accept_distance):
     if destination and accept_distance:  # if both strings are not none and not blank, i.e. they are valid strings
         if n_clicks > 0:
             top_spots_on_map = []
-            spots = cu.get_parking_spots(destination,
-                                         accept_distance)  # return the list of the objects that contains the streets info.
+            spots, destination_coordinates = cu.get_parking_spots(destination,accept_distance)
+            # return the list of the objects that contains the streets info and the coordinates of the destination as
+            # tuple.
             for spot in spots:
                 lats = spot.street_meet_expect_coordinates[0]
                 longs = spot.street_meet_expect_coordinates[1]
+                street_details = f"Address: <a href=\"https://www.google.com/maps/place/{spot.street_lat_mid}," \
+                                 f"{spot.street_lon_mid}\" target=_blank>" + spot.street_name + f"</a> <br />Distance: {round(spot.calculated_distance, 2)} miles" \
+                                 f"<br />Spots Available: {spot.spaceavail}"
                 top_spots_on_map.append(
                     {
                         "type": "scattermapbox",
                         "lat": lats,
                         "lon": longs,
-                        "hoverinfo": "text",
                         "mode": "lines",
-                        "text": f"Address: <a href=\"https://www.google.com/maps/place/{spot.street_lat_mid},{spot.street_lon_mid}\" target=_blank>"
-                                + spot.street_name + f"</a> <br />Distance: {round(spot.calculated_distance, 2)} miles",
                         "marker": {
                             "size": 4,
                             "color": "green"
                         },
+                        "hovertemplate": f"{street_details}<extra></extra>",
                         "hoverlabel": {
                             "bgcolor": "white",
                             "font_size": 10
@@ -183,7 +185,28 @@ def submit_data(n_clicks, destination, accept_distance):
                         "visible": True
                     }
                 )
+            destination_address_link =  f"Address: <a href=\"https://www.google.com/maps/place/{destination_coordinates[0]}," \
+                                 f"{destination_coordinates[1]}\" target=_blank>" + destination + f"</a>"
+            top_spots_on_map.append(
+                {
+                    "type": "scattermapbox",
+                    "lat": [destination_coordinates[0]],
+                    "lon": [destination_coordinates[1]],
+                    "mode": "point",
+                    "marker": {
+                        "size": 8,
+                        "color": "red"
+                    },
+                    "hovertemplate": f"{destination_address_link}<extra></extra>",
+                    "hoverlabel": {
+                        "bgcolor": "white",
+                        "font_size": 10
+                    },
+                    "showlegend": False,
 
+                    "visible": True
+                }
+            )
             return {
                 "data": top_spots_on_map,
                 "layout": layout
