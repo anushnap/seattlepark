@@ -1,12 +1,11 @@
 import unittest
 import os
 import pandas as pd
-#import sys
+import sys
 #from pandas.util.testing import assert_frame_equal # <-- for testing dataframes
-
-"""Anushna, can you help me with this part please, i need to import the ParkingRecommender and ParkingSpot modules"""
-from seattlepark.parking_recommender import ParkingRecommender
-from seattlepark.src.parking_spot import ParkingSpot
+sys.path.append('../src')
+from parking_recommender import ParkingRecommender
+from src.parking_spot import ParkingSpot
 
 
 class TestRecommenderInit(unittest.TestCase):
@@ -44,3 +43,7 @@ class TestDataSlice(unittest.TestCase):
 class TestMaxFreeSpace(unittest.TestCase):
     """I can't actually think of any ways this method might fail lol"""
     pass
+
+
+if __name__ == "__main__":
+    unittest.main()
