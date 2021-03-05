@@ -20,7 +20,7 @@
 # "ps" is a list of ParkingSpot objects (at least 5 entries)
 # "dt" is a datetime string such as '2020-02-04 12:46:29.315237'
 # pr = ParkingRecommender(ps,dt)
-# output = pr.max_freespace()
+# output = pr.recommend()
 # Here, output is a list of 5 ParkingSpot objects, with their .spaceavail 
 # attributes filled in.
 
@@ -57,13 +57,9 @@ class ParkingRecommender:
                 'No streets were passed to the recommender'
             )
 
-        # extract hour from datetimestr & store as object attribute
         datetime = pd.to_datetime(datetimestr)
         self.hr = datetime.hour
-        # debugging print statement
-        # print('Detected Hour: %d' % self.hr)
 
-        # Run the slice_df function to filter the database immediately by streets
         self.initial_df = self.slice_by_street()
 
     def slice_by_street(self):
@@ -77,9 +73,9 @@ class ParkingRecommender:
             street_names.append(st.street_name)
 
         filepath = os.path.join(
-            os.path.dirname(__file__),
-            "../data/Annual_Parking_Study_Data_Cleaned2.csv"
-            )
+                os.path.dirname(__file__),
+                "../data/Annual_Parking_Study_Data_Cleaned2.csv"
+                )
 
         # Import the dataset
         df = pd.read_csv(filepath, low_memory=False)
@@ -92,7 +88,6 @@ class ParkingRecommender:
                     'Street %s not found in Parking Study database' % name
                 )
 
-        # slice to streets in the list (hour slicing moved to max_freespace)
         df_sliced = df[df['Unitdesc'].isin(street_names)]
         return df_sliced
 
@@ -101,46 +96,55 @@ class ParkingRecommender:
         Slice initial_df to the requested hour, return further sliced df
         """
         # filter initial_df down to the requested hour
-        df_this_hour = self.initial_df[self.initial_df['Hour'] == req_hr]
+        df_this_hour = self.initial_df[
+            self.initial_df['Hour'] == req_hr
+        ]
 
         # check if there were any results
         if df_this_hour.shape[0] == 0:
             # no observations at specified hour, try one hour later
+            print('no results at %d' % req_hr)
             if req_hr < 23:
                 new_hr = req_hr + 1
             else:  # there is no hour 24, wraps around to 0
                 new_hr = 0
-            df_this_hour = self.initial_df[self.initial_df['Hour'] == new_hr]
+            print('trying %d' % new_hr)
+            df_this_hour = self.initial_df[
+                self.initial_df['Hour'] == new_hr
+            ]
 
         # check again to see if that worked
         if df_this_hour.shape[0] == 0:
             # still no observations, try one hour earlier
+            print('no results at %d' % new_hr)
             if req_hr > 0:
                 new_hr = req_hr - 1
             else:  # there is no hour -1, wraps around to 23
                 new_hr = 23
-            df_this_hour = self.initial_df[self.initial_df['Hour'] == new_hr]
+            print('trying %d' % new_hr)
+            df_this_hour = self.initial_df[
+                self.initial_df['Hour'] == new_hr
+            ]
 
         # check again to see if that worked
         if df_this_hour.shape[0] == 0:
             # still no observations, raise an error that we can catch
+            print('no results at %d' % new_hr)
             raise NoSearchResultsError
         else:
             return df_this_hour
 
     def max_freespace(self):
         """
-        Return a list of (streetname, # available spaces)
-        tuples for every street in initial_list
+        Return a tuple (streets,free_spaces) for all the streets
+        in the initial list
         """
-        try:
-            df2 = self.slice_by_hour(self.hr)
-        except NoSearchResultsError:
-            raise NoSearchResultsError
+        # slice df to the requested hour
+        df2 = self.slice_by_hour(self.hr)
 
         # List of unique streets in initial_df
         streets = df2['Unitdesc'].unique()
-        num_streets = len(streets)
+
         # initialize a list to keep track of free spaces on each street
         free_spaces = np.zeros((len(streets),))
         # loop through each street and calculate free spaces
@@ -156,29 +160,43 @@ class ParkingRecommender:
                 this_side = this_street[this_street['Side'] == side]
                 num_obs = this_side.shape[0]
                 if num_obs > 0:
-                    # If there aren't any observations for this street, that's fine. It just falls out of contention.
-                    # We know that other streets have observations, since the dataframe isn't empty.
-
-                    # This calculation gives "free spaces per observation," an estimate of how many spaces are available
+                    # This calculation gives "free spaces per observation,"
+                    # an estimate of how many spaces are available
                     avg_freespace = this_side['Free_Spaces'].mean()
-                    # debugging print
-                    # print('%s side of %s has %d obs and avg %4.1f spaces' % (side, street, num_obs, avg_freespace))
-                    # Add the average free spaces on this side to free_spaces
-                    # Eventually free_spaces[i] will have the total number of free spaces, on both sides of the street
                     free_spaces[i] += avg_freespace
 
-        # Now we have a list of streets, with a corresponding list of the estimated number of available spaces
-        # Sort the list of freespaces and return the sorted index, so we can also sort the list of streets
+        return streets, free_spaces
+
+    def recommend(self, num_returns=5):
+        """
+        Returns a num_returns-length list of parking spots
+        with the highest estimated number of available spaces
+        """
+        try:
+            (streets, free_spaces) = self.max_freespace()
+        except NoSearchResultsError:
+
+            # no observations in self.hr +/- 1
+            # just return the num_returns closest streets
+            newlist = sorted(self.initial_list,
+                             key=lambda x: x.calculated_distance,
+                             reverse=False)
+            n_entries = min(len(self.initial_list), num_returns)
+            print('Returning %d closest spots' % n_entries)
+            for i in range(n_entries):
+                print(newlist[i].street_name)
+            return newlist[0:n_entries]
+
+        # Assuming no exception was raised:
         sort_index = np.argsort(free_spaces)
         free_spaces_sorted = free_spaces[sort_index]
         streets_sorted = streets[sort_index]
-        # The sort is in ascending order, so take the last 5 entries.
-        # if there are fewer than 5 streets in initial_list, just return all of them
-        n_entries = min(num_streets, num_returns)
+        # The sort is in ascending order, so take the last num_returns entries
+        n_entries = min(len(streets), num_returns)
         streets_select = streets_sorted[-n_entries:]
         free_spaces_select = free_spaces_sorted[-n_entries:]
 
-        # Now, downselect the list of ParkingSpots to just the the ones we've selected
+        # Now, downselect the list of ParkingSpots to just the ones selected
         output_list = []
         for i, select in enumerate(streets_select):
             #  find "select" in self.initial_list
@@ -188,14 +206,14 @@ class ParkingRecommender:
                     self.initial_list[j].spaceavail = free_spaces_select[i]
                     # Copy this entry over to the output list
                     output_list.append(self.initial_list[j])
-                    break  # no need to continue searching for "select" after finding it
+                    break  # don't continue searching for "select" after found
 
         # some debugging print statements
         for i in range(len(output_list)):
-            print('%s: %4.1f spaces' % (output_list[i].street_name, output_list[i].spaceavail))
+            print('%s: %4.1f spaces' % (
+                output_list[i].street_name,
+                output_list[i].spaceavail
+            )
+                  )
 
         return output_list
-
-    def recommend(self, num_returns=5):
-        """Returns a num_returns-length list of parking spots with the highest estimated number of available spaces"""
-        pass

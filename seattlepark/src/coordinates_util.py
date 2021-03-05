@@ -67,7 +67,7 @@ class CoordinatesUtil:
             #street_meet_expect.sort(key=lambda point: point.calculated_distance)
             current_utc_time = datetime.datetime.now()
             pr = ParkingRecommender(street_meet_expect, current_utc_time)
-            recommended_spots = pr.max_freespace()
+            recommended_spots = pr.recommend()
             return recommended_spots, destination_coordinates
 
     def get_destination_coordinates(self, destination_address):
