@@ -63,8 +63,7 @@ class ParkingRecommender:
         # self.wkday = datetime.dayofweek
 
         # Run the slice_df function to filter the database immediately
-        self.initial_df = self.slice_df()  # dataframe corresponding to initial_list
-
+        self.initial_df = self.slice_df()  # df corresponding to initial_list
 
     def slice_df(self):
         """Import the Parking Study dataset and filter it down to the streets
@@ -77,27 +76,35 @@ class ParkingRecommender:
 
         # Before we even import anything, make sure
 
-        filepath = os.path.join(os.path.dirname(__file__), "data/Annual_Parking_Study_Data_Cleaned2.csv")
+        filepath = os.path.join(
+                os.path.dirname(__file__), 
+                "../data/Annual_Parking_Study_Data_Cleaned2.csv"
+                )
         # Import the dataset
         df = pd.read_csv(filepath, low_memory=False)
 
         # check if all the requested street names are in the database
-        unitdescs = df['Unitdesc'].unique()  # list of unique streets in database
+        unitdescs = df['Unitdesc'].unique()  # list of unique streets
         for name in street_names:
             if name not in unitdescs:
-                raise InvalidStreetError('Street %s not found in Parking Study database' % name)
+                raise InvalidStreetError(
+                    'Street %s not found in Parking Study database' % name
+                    )
 
-        df_sliced = df[df['Unitdesc'].isin(street_names) & (df['Hour'] == self.hr)]
+        df_sliced = df[df['Unitdesc'].isin(street_names) &
+                       (df['Hour'] == self.hr)]
 
         # check if resulting slice has anything in it
         if df_sliced.shape[0] == 0:
-            raise NoSearchResultsError('The specified filter returned no data')
+            raise NoSearchResultsError(
+                'The specified filter returned no data'
+                )
         else:
             return df_sliced
 
-
     def max_freespace(self, num_returns=5):
-        """Returns a num_returns-length list of parking spots with the highest estimated number of available spaces"""
+        """Returns a num_returns-length list of parking spots with the highest
+         estimated number of available spaces"""
         # List of unique streets in initial_df
         streets = self.initial_df['Unitdesc'].unique()
         num_streets = len(streets)
@@ -106,7 +113,9 @@ class ParkingRecommender:
         # loop through each street and calculate free spaces
         for i, street in enumerate(streets):
             # filter the df to list observations from street (unitdesc) i only
-            this_street = self.initial_df[self.initial_df['Unitdesc'] == street]
+            this_street = self.initial_df[
+                self.initial_df['Unitdesc'] == street
+                ]
 
             # how many sides does this street have? At most 2
             sides = this_street['Side'].unique()
@@ -116,29 +125,36 @@ class ParkingRecommender:
                 this_side = this_street[this_street['Side'] == side]
                 num_obs = this_side.shape[0]
                 if num_obs > 0:
-                    # If there aren't any observations for this street, that's fine. It just falls out of contention.
-                    # We know that other streets have observations, since the dataframe isn't empty.
+                    # If there aren't any observations for this street, 
+                    # that's fine. It just falls out of contention.
+                    # We know that other streets have observations, 
+                    # since the dataframe isn't empty.
 
-                    # This calculation gives "free spaces per observation," an estimate of how many spaces are available
+                    # This calculation gives "free spaces per observation,"
+                    # an estimate of how many spaces are available
                     avg_freespace = this_side['Free_Spaces'].mean()
                     # debugging print
-                    # print('%s side of %s has %d obs and avg %4.1f spaces' % (side, street, num_obs, avg_freespace))
+                    # print('%s side of %s has %d obs and avg %4.1f spaces' 
+                    # % (side, street, num_obs, avg_freespace))
                     # Add the average free spaces on this side to free_spaces
-                    # Eventually free_spaces[i] will have the total number of free spaces, on both sides of the street
+                    # Eventually free_spaces[i] will have the total number of
+                    # free spaces, on both sides of the street
                     free_spaces[i] += avg_freespace
 
-        # Now we have a list of streets, with a corresponding list of the estimated number of available spaces
-        # Sort the list of freespaces and return the sorted index, so we can also sort the list of streets
+        # Now we have a list of streets, with a corresponding list of the 
+        # estimated number of available spaces.
+        # Sort the list of freespaces and return the sorted index, so we 
+        # can also sort the list of streets
         sort_index = np.argsort(free_spaces)
         free_spaces_sorted = free_spaces[sort_index]
         streets_sorted = streets[sort_index]
         # The sort is in ascending order, so take the last 5 entries.
-        # if there are fewer than 5 streets in initial_list, just return all of them
+        # if there are fewer than 5 streets in initial_list, just return all
         n_entries = min(num_streets, num_returns)
         streets_select = streets_sorted[-n_entries:]
         free_spaces_select = free_spaces_sorted[-n_entries:]
 
-        # Now, downselect the list of ParkingSpots to just the the ones we've selected
+        # Now, downselect the list of ParkingSpots to just the ones selected
         output_list = []
         for i, select in enumerate(streets_select):
             #  find "select" in self.initial_list
@@ -148,10 +164,14 @@ class ParkingRecommender:
                     self.initial_list[j].spaceavail = free_spaces_select[i]
                     # Copy this entry over to the output list
                     output_list.append(self.initial_list[j])
-                    break  # no need to continue searching for "select" after finding it
+                    break  # don't continue searching for "select" after found
 
         # some debugging print statements
         for i in range(len(output_list)):
-            print('%s: %4.1f spaces' % (output_list[i].street_name, output_list[i].spaceavail))
+            print('%s: %4.1f spaces' % (
+                    output_list[i].street_name, 
+                    output_list[i].spaceavail
+                )
+            )
 
         return output_list
