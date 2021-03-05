@@ -28,6 +28,7 @@
 import numpy as np
 import pandas as pd
 import os
+from histogram import Histogram
 
 
 class NoParkingSpotsInListError(Exception):
@@ -61,6 +62,8 @@ class ParkingRecommender:
         self.hr = datetime.hour
 
         self.initial_df = self.slice_by_street()
+
+        self.hist = Histogram(self.initial_df)
 
     def slice_by_street(self):
         """
@@ -204,6 +207,9 @@ class ParkingRecommender:
                 if self.initial_list[j].street_name == select:
                     # Fill in the .spaceavail attribute
                     self.initial_list[j].spaceavail = free_spaces_select[i]
+
+                    # Fill in the .histo attribute
+                    self.initial_list[j].histo = self.hist.createHistogram(select)
                     # Copy this entry over to the output list
                     output_list.append(self.initial_list[j])
                     break  # don't continue searching for "select" after found

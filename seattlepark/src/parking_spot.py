@@ -12,6 +12,8 @@
 # street_name : the street address.
 # street_lat_mid: the latitude of the middle point of this street.
 # street_lon_mid: the longitude of the middle point of this street.
+# spaceavail: estimated # of available spots (set by ParkingRecommender)
+# histo: html string for displaying histogram (set by Histogram)
 class ParkingSpot:
     def __init__(self, distance, coordinates, street_name, street_lat_mid, street_lon_mid):
         self.calculated_distance = distance
@@ -20,5 +22,6 @@ class ParkingSpot:
         self.street_lat_mid = street_lat_mid
         self.street_lon_mid = street_lon_mid
         self.spaceavail = 0
+        self.histo = None
 
 
