@@ -37,7 +37,6 @@ class InvalidStreetError(Exception):
     pass
 
 
-
 class ParkingRecommender:
     def __init__(self, parkingspotlist, datetimestr):
         """parkingspotlist is a List object containing ParkingSpot objects, the output of the coordinates_util module.
