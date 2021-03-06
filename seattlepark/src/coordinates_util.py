@@ -7,6 +7,7 @@ from parking_spot import ParkingSpot
 import base64
 import datetime
 
+
 class CoordinatesUtil:
     coordinates_mapping = {}
 
@@ -31,7 +32,7 @@ class CoordinatesUtil:
                     geometry = feature["geometry"]
                     coordinates = geometry["coordinates"]
                     mid_point = geometry["midpoint"]
-                    address = properties["UNITDESC"] # How about using geo_locator.geocode.reverse()???
+                    address = properties["UNITDESC"]  # How about using geo_locator.geocode.reverse()???
                     lat_start = coordinates[0][1]
                     lat_end = coordinates[1][1]
                     log_start = coordinates[0][0]
@@ -64,11 +65,14 @@ class CoordinatesUtil:
         if len(street_meet_expect) == 0:
             return [], None
         else:
-            #street_meet_expect.sort(key=lambda point: point.calculated_distance)
+            # street_meet_expect.sort(key=lambda point: point.calculated_distance)
             current_utc_time = datetime.datetime.now()
             pr = ParkingRecommender(street_meet_expect, current_utc_time)
-            recommended_spots = pr.recommend()
-            return recommended_spots, destination_coordinates
+            try:
+                recommended_spots = pr.recommend()
+                return recommended_spots, destination_coordinates
+            except Exception:
+                return street_meet_expect[0:5], destination_coordinates
 
     def get_destination_coordinates(self, destination_address):
         geo_locator = GoogleV3(api_key=self.key)
@@ -80,4 +84,3 @@ class CoordinatesUtil:
         # return the distance between coordinates1 and coordinates2
         calculated_distance = hs.haversine(coordinates1, coordinate2, unit="mi")
         return calculated_distance
-
