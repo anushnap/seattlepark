@@ -1,9 +1,10 @@
 import unittest
+from unittest.mock import Mock
 import os
 import pandas as pd
 from dateutil.parser._parser import ParserError
 # import sys
-# from pandas.util.testing import assert_frame_equal
+from pandas.util.testing import assert_frame_equal
 
 from seattlepark.src.parking_recommender import NoParkingSpotsInListError, \
     NoSearchResultsError, InvalidStreetError, ParkingRecommender
@@ -25,19 +26,18 @@ class TestRecommenderInit(unittest.TestCase):
                           'Invalid datetime string')
         self.assertRaises((TypeError, ValueError), ParkingRecommender, ps,
                           '-1')
-        self.assertRaises((TypeError, NoSearchResultsError),
-                          ParkingRecommender, ps, -1)
+        # self.assertRaises((TypeError, NoSearchResultsError),
+        #                   ParkingRecommender, ps, -1)
     
-    # Do we need a test like this? idk
     def test_Annual_Parking_Data_file(self):
-        # filepath = os.path.join(os.path.dirname(__file__), 
-        #                         "data/Annual_Parking_Study_Data_Cleaned2.csv")
-        # test_df = pd.read_csv(filepath, low_memory = False)
-        pass
-
+        """Make sure normal call doesn't cause exception or errors"""
+        filepath = os.path.join(os.path.dirname(__file__), 
+                                "../data/Annual_Parking_Study_Data_Cleaned2.csv")
+        pd.read_csv(filepath, low_memory = False)
+        
 
 class TestDataSlice(unittest.TestCase):
-    """Testing ParkingRecommender.slice_df()"""
+    """Testing ParkingRecommender.slice_by_street()"""
     def test_raise_Invalid_Street_Error(self):
         """ParkingSpot list contains a street not in the database"""
         ps = [ParkingSpot(0, 0, '1ST AVE BETWEEN SENECA ST AND UNIVERSITY ST',
@@ -48,6 +48,19 @@ class TestDataSlice(unittest.TestCase):
                           0, 0)]
         self.assertRaises(InvalidStreetError, ParkingRecommender, ps,
                           '2020-02-04 12:46:29.315237')
+
+    # WIP
+    def test_slice_by_hour(self):
+        ParkingRecommender = Mock()
+        ParkingRecommender.initial_list.return_value = 
+                [0, 0, '1ST AVE BETWEEN SENECA ST AND UNIVERSITY ST', 0, 0]
+        
+        filepath = os.path.join(os.path.dirname(__file__), 
+                                "../data/Annual_Parking_Study_Data_Cleaned2.csv")
+        
+        test_df = pd.read_csv(filepath, low_memory = False)
+        filtered_df = test_df[test_df['Unitdesc']].isin(ParkingRecommender.initial_list.street_name)
+            
 
 # Come up with a way to test this later - these methods have changed a lot
 # This exception only gets raised within a try-except statement
@@ -69,6 +82,17 @@ class TestDataSlice(unittest.TestCase):
 class TestMaxFreeSpace(unittest.TestCase):
     """I can't actually think of any ways this method might fail lol"""
     pass
+
+
+class TestRecommend(unittest.TestCase):
+
+    def test_recommend_raises_exception(self):
+        max_freespace = Mock()
+        max_freespace.return_value = ([], [])
+
+    def test_output_list(self):
+        max_freespace = Mock()
+        max_freespace.return_value = ([], []) # put something to test here
 
 
 if __name__ == "__main__":
