@@ -52,8 +52,8 @@ class TestDataSlice(unittest.TestCase):
     # WIP
     def test_slice_by_hour(self):
         ParkingRecommender = Mock()
-        ParkingRecommender.initial_list.return_value = 
-                [0, 0, '1ST AVE BETWEEN SENECA ST AND UNIVERSITY ST', 0, 0]
+        #ParkingRecommender.initial_list.return_value = 
+                #[0, 0, '1ST AVE BETWEEN SENECA ST AND UNIVERSITY ST', 0, 0]
         
         filepath = os.path.join(os.path.dirname(__file__), 
                                 "../data/Annual_Parking_Study_Data_Cleaned2.csv")
@@ -81,7 +81,21 @@ class TestDataSlice(unittest.TestCase):
 
 class TestMaxFreeSpace(unittest.TestCase):
     """I can't actually think of any ways this method might fail lol"""
-    pass
+    def test_max_freespace(self):
+        filepath = os.path.join(os.path.dirname(__file__), 
+                                "../data/Annual_Parking_Study_Data_Cleaned2.csv")
+        
+        test_df = pd.read_csv(filepath, low_memory = False)
+        filtered_df = test_df[test_df['Unitdesc'] == 'DEXTER AVE N BETWEEN WARD ST AND PROSPECT ST']
+        
+        ParkingRecommender = Mock()
+        ParkingRecommender.initial_df = filtered_df
+        ParkingRecommender.hr = 12
+
+        #self.assertEquals(ParkingRecommender.max_freespace(), (['DEXTER AVE N BETWEEN WARD ST AND PROSPECT ST'], [3]))
+        
+
+        
 
 
 class TestRecommend(unittest.TestCase):
