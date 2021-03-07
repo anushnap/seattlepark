@@ -65,7 +65,6 @@ retrying==1.3.3
 Rtree==0.9.4
 ruamel-yaml==0.15.87
 scikit-image==0.17.2
-seattlepark==0.1.0
 text-unidecode==1.3
 tifffile==2020.10.1
 tornado==6.0.4
