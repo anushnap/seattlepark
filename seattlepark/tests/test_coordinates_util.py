@@ -17,12 +17,12 @@ class CoordinatesUtilTest(unittest.TestCase):
                                                       test_loc1,
                                                       test_loc2))
     
-    # GET QIAOHUIS WEEB
+    # GET QIAOHUIS HELP
     def test_get_destination_coordinates(self):
         pass
 
     def test_get_parking_spots(self):
-        
+        pass
 
 
 if __name__ == "__main__":
