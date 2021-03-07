@@ -10,6 +10,9 @@ cu = CoordinatesUtil()
 print("Reading GeoJson Config..")
 cu.sea_parking_geocode()
 
+#initiate dash server
+server = app.server
+
 # mapbox token
 mapbox_accesstoken = 'pk.eyJ1IjoicWhzdW4iLCJhIjoiY2tsNGdjMHNlMGR3YTJwcXh6NGNlbGRzNyJ9.R2h8L4RaqEK-2p4BEgUMpg'
 
