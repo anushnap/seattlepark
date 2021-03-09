@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import Mock
-from seattlepark.src.coordinates_util import CoordinatesUtil
+from coordinates_util import *
 import pandas as pd
 import numpy as np
 import haversine as hs

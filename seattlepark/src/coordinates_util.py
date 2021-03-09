@@ -1,4 +1,6 @@
 import json
+import os
+
 from geopy import GoogleV3
 import haversine as hs
 
@@ -12,19 +14,23 @@ class CoordinatesUtil:
     coordinates_mapping = {}
 
     def __init__(self):
-        with open("resources/google_map_api.key") as handle:
+        path = os.path.join(os.path.dirname(__file__), 'resources/google_map_api.key')
+        with open(path) as handle:
             encoded_key_str = handle.read()
             encoded_bytes = encoded_key_str.encode("ascii")  # make str into bytes, for encoding and decoding
             decoded_bytes = base64.b64decode(encoded_bytes)
             self.key = decoded_bytes.decode("ascii")
+
+        # Initializing the geo location to the GoogleV3 in the constructor with the google api key extracted above
+        self.geo_locator = GoogleV3(api_key=self.key)
 
     def sea_parking_geocode(self):
         if self.coordinates_mapping and len(
                 self.coordinates_mapping) > 0:
             return self.coordinates_mapping
         else:
-            with open(
-                    'resources/Midpoints_and_LineCoords.json') as json_data:
+            path = os.path.join(os.path.dirname(__file__), 'resources/Midpoints_and_LineCoords.json')
+            with open(path) as json_data:
                 seattle_data = json.load(json_data)
                 features = seattle_data["features"]
                 for feature in features:
@@ -75,8 +81,7 @@ class CoordinatesUtil:
                 return street_meet_expect[0:5], destination_coordinates
 
     def get_destination_coordinates(self, destination_address):
-        geo_locator = GoogleV3(api_key=self.key)
-        coordinates = geo_locator.geocode(destination_address).point
+        coordinates = self.geo_locator.geocode(destination_address)
         print(coordinates)
         return [coordinates.latitude, coordinates.longitude]
 
