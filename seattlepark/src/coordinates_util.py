@@ -14,15 +14,9 @@ class CoordinatesUtil:
     coordinates_mapping = {}
 
     def __init__(self):
-        path = os.path.join(os.path.dirname(__file__), 'resources/google_map_api.key')
-        with open(path) as handle:
-            encoded_key_str = handle.read()
-            encoded_bytes = encoded_key_str.encode("ascii")  # make str into bytes, for encoding and decoding
-            decoded_bytes = base64.b64decode(encoded_bytes)
-            self.key = decoded_bytes.decode("ascii")
-
+        key = self.decode_data('resources/google_map_api.key')
         # Initializing the geo location to the GoogleV3 in the constructor with the google api key extracted above
-        self.geo_locator = GoogleV3(api_key=self.key)
+        self.geo_locator = GoogleV3(api_key=key)
 
     def sea_parking_geocode(self):
         if self.coordinates_mapping and len(
@@ -89,3 +83,11 @@ class CoordinatesUtil:
         # return the distance between coordinates1 and coordinates2
         calculated_distance = hs.haversine(coordinates1, coordinate2, unit="mi")
         return calculated_distance
+
+    def decode_data(self, file_location):
+        path = os.path.join(os.path.dirname(__file__), file_location)
+        with open(path) as handle:
+            encoded_key_str = handle.read()
+            encoded_bytes = encoded_key_str.encode("ascii")  # make str into bytes, for encoding and decoding
+            decoded_bytes = base64.b64decode(encoded_bytes)
+            return decoded_bytes.decode("ascii")

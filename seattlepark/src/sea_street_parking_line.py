@@ -10,11 +10,8 @@ cu = CoordinatesUtil()
 print("Reading GeoJson Config..")
 cu.sea_parking_geocode()
 
-#initiate dash server
-server = app.server
-
 # mapbox token
-mapbox_accesstoken = 'pk.eyJ1IjoicWhzdW4iLCJhIjoiY2tsNGdjMHNlMGR3YTJwcXh6NGNlbGRzNyJ9.R2h8L4RaqEK-2p4BEgUMpg'
+mapbox_access_token = cu.decode_data('resources/mapbox_token')
 
 maps = [go.Scattermapbox(
     lat=[],  # []
@@ -48,7 +45,7 @@ layout = go.Layout(
     mapbox1=dict(
         domain={'x': [0.1, 1], 'y': [0, 1]},
         center=dict(lat=latitude, lon=longitude),
-        accesstoken=mapbox_accesstoken,
+        accesstoken=mapbox_access_token,
         zoom=11,
     ),
 
@@ -159,7 +156,7 @@ def submit_data(n_clicks, destination, accept_distance):
     if destination and accept_distance:  # if both strings are not none and not blank, i.e. they are valid strings
         if n_clicks > 0:
             top_spots_on_map = []
-            spots, destination_coordinates = cu.get_parking_spots(destination,accept_distance)
+            spots, destination_coordinates = cu.get_parking_spots(destination, accept_distance)
             # return the list of the objects that contains the streets info and the coordinates of the destination as
             # tuple.
             for spot in spots:
@@ -167,7 +164,7 @@ def submit_data(n_clicks, destination, accept_distance):
                 longs = spot.street_meet_expect_coordinates[1]
                 street_details = f"Address: <a href=\"https://www.google.com/maps/place/{spot.street_lat_mid}," \
                                  f"{spot.street_lon_mid}\" target=_blank>" + spot.street_name + f"</a> <br />Distance: {round(spot.calculated_distance, 2)} miles" \
-                                 f"<br />Spots Available: {spot.spaceavail}"
+                                                                                                f"<br />Spots Available: {spot.spaceavail}"
                 top_spots_on_map.append(
                     {
                         "type": "scattermapbox",
@@ -188,8 +185,8 @@ def submit_data(n_clicks, destination, accept_distance):
                         "visible": True
                     }
                 )
-            destination_address_link =  f"Address: <a href=\"https://www.google.com/maps/place/{destination_coordinates[0]}," \
-                                 f"{destination_coordinates[1]}\" target=_blank>" + destination + f"</a>"
+            destination_address_link = f"Address: <a href=\"https://www.google.com/maps/place/{destination_coordinates[0]}," \
+                                       f"{destination_coordinates[1]}\" target=_blank>" + destination + f"</a>"
             top_spots_on_map.append(
                 {
                     "type": "scattermapbox",
