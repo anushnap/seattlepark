@@ -6,16 +6,13 @@ from parking_recommender import ParkingRecommender
 from parking_spot import ParkingSpot
 import base64
 import datetime
-import os
+
 
 class CoordinatesUtil:
     coordinates_mapping = {}
 
     def __init__(self):
-        keypath = os.path.join(
-                os.path.dirname(__file__),
-                "resources/google_map_api.key")
-        with open(keypath) as handle:
+        with open("resources/google_map_api.key") as handle:
             encoded_key_str = handle.read()
             encoded_bytes = encoded_key_str.encode("ascii")  # make str into bytes, for encoding and decoding
             decoded_bytes = base64.b64decode(encoded_bytes)
@@ -26,11 +23,8 @@ class CoordinatesUtil:
                 self.coordinates_mapping) > 0:
             return self.coordinates_mapping
         else:
-            midpoints = os.path.join(
-                    os.path.dirname(__file__),
-                    "resources/Midpoints_and_LineCoords.json")
             with open(
-                    midpoints) as json_data:
+                    'resources/Midpoints_and_LineCoords.json') as json_data:
                 seattle_data = json.load(json_data)
                 features = seattle_data["features"]
                 for feature in features:
