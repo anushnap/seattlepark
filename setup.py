@@ -7,6 +7,5 @@ setup(
     version='0.1.0',
     packages=find_packages(),
     description="edit later",
-    packages=find_packages(),
     requires=REQUIRES
 )
