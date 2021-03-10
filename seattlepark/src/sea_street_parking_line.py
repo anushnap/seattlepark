@@ -4,7 +4,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 import dash  # (version 1.11.0)
 from dash.dependencies import Input, Output, State
-from coordinates_util import CoordinatesUtil
+from seattlepark.src.coordinates_util import CoordinatesUtil
 
 cu = CoordinatesUtil()
 print("Reading GeoJson Config..")

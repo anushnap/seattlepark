@@ -24,11 +24,10 @@
 # Here, output is a list of 5 ParkingSpot objects, with their .spaceavail 
 # attributes filled in.
 
-
+import os
 import numpy as np
 import pandas as pd
-import os
-from histogram import Histogram
+from seattlepark.src.histogram import Histogram
 
 
 class NoParkingSpotsInListError(Exception):

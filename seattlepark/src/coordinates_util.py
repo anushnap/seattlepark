@@ -1,11 +1,10 @@
 import json
 import os
-
 from geopy import GoogleV3
 import haversine as hs
 
-from parking_recommender import ParkingRecommender
-from parking_spot import ParkingSpot
+from seattlepark.src.parking_recommender import ParkingRecommender
+from seattlepark.src.parking_spot import ParkingSpot
 import base64
 import datetime
 
