@@ -1,6 +1,5 @@
 import json
 import os
-
 from geopy import GoogleV3
 import haversine as hs
 
