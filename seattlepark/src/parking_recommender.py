@@ -27,7 +27,7 @@
 import os
 import numpy as np
 import pandas as pd
-from seattlepark.src.histogram import Histogram
+from histogram import Histogram
 
 
 class NoParkingSpotsInListError(Exception):
