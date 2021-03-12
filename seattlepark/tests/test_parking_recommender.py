@@ -32,9 +32,13 @@ class TestParkingRecommender(unittest.TestCase):
 
     def test_raises_TypeError(self):
         """ParkingSpot is passed invalid datetime format"""
-        self.assertRaises((TypeError, ParserError), ParkingRecommender, self.test_ps, 
+        self.assertRaises((TypeError, ParserError), 
+                          ParkingRecommender, 
+                          self.test_ps,
                           'Invalid datetime string')
-        self.assertRaises((TypeError, ValueError), ParkingRecommender, self.test_ps,
+        self.assertRaises((TypeError, ValueError),
+                          ParkingRecommender,
+                          self.test_ps,
                           '-1')
     
     def test_Annual_Parking_Data_file(self):
@@ -44,10 +48,12 @@ class TestParkingRecommender(unittest.TestCase):
     def test_raise_Invalid_Street_Error(self):
         """ParkingSpot list contains a street not in the database"""
         ps_single = [ParkingSpot(0, 0, 'NOT A VALID STREET', 0, 0)]
-        ps_multi = [ParkingSpot(0, 0, '1ST AVE BETWEEN SENECA ST AND UNIVERSITY ST',
-                                 0, 0),
-                    ParkingSpot(0, 0, '1ST AVE BETWEEN PIKE ST AND PINE ST',
-                                 0, 0),
+        ps_multi = [ParkingSpot(0, 0, 
+                                '1ST AVE BETWEEN SENECA ST AND UNIVERSITY ST',
+                                0, 0),
+                    ParkingSpot(0, 0,
+                                '1ST AVE BETWEEN PIKE ST AND PINE ST',
+                                0, 0),
                     ParkingSpot(0, 0, 'NOT A VALID STREET', 
                                 0, 0)]
         
@@ -61,7 +67,8 @@ class TestParkingRecommender(unittest.TestCase):
         filtered_df = self.test_pr.initial_df[
                 self.test_pr.initial_df['Hour'] == self.test_pr.hr]
         
-        assert_frame_equal(filtered_df, self.test_pr.slice_by_hour(self.test_pr.hr))
+        assert_frame_equal(filtered_df, 
+                           self.test_pr.slice_by_hour(self.test_pr.hr))
     
     def test_raises_No_Search_Results_Error(self):
         """slice_by_hour raises NoSearchResultsError"""
@@ -72,13 +79,15 @@ class TestParkingRecommender(unittest.TestCase):
     def test_slice_by_hour_returns_previous_hour(self):
         """slice_by_hour returns drataframe sliced to previous hour
         when passed hour lacks data"""
-        prev_hour_df = self.test_pr.initial_df[self.test_pr.initial_df['Hour'] == 20]
+        prev_hour_df = self.test_pr.initial_df[
+                    self.test_pr.initial_df['Hour'] == 20]
         assert_frame_equal(prev_hour_df, self.test_pr.slice_by_hour(21))
 
     def test_slice_by_hour_returns_future_hour(self):
         """slice_by_hour returns dataframe sliced to next available hour
         when passed hour lacks data"""
-        next_hour_df = self.test_pr.initial_df[self.test_pr.initial_df['Hour'] == 8]
+        next_hour_df = self.test_pr.initial_df[
+                    self.test_pr.initial_df['Hour'] == 8]
         assert_frame_equal(next_hour_df, self.test_pr.slice_by_hour(7))
                 
     def test_max_freespace(self):
