@@ -15,13 +15,9 @@ class TestParkingRecommender(unittest.TestCase):
         """
         Create test_df and ParkingRecommender with 1 address and 
         2021/01/01 12:00:00 PM as time.
-        test_df created using Annual_Parking_Study_Data_Cleaned2.csv from
-        seattlepark/seattlepark/tests/data.
-        Dataframes created using ParkingRecommender will reference 
-        seattlepark/seattlepark/src/data.
         """
         self.filepath = os.path.join(os.path.dirname(__file__),
-                            "data/Annual_Parking_Study_Data_Cleaned2.csv")
+                        "../data/Annual_Parking_Study_Data_Cleaned2.csv")
         self.test_df = pd.read_csv(self.filepath, low_memory = False)
         self.test_street = 'DEXTER AVE N BETWEEN WARD ST AND PROSPECT ST'
         self.test_ps = ParkingSpot(0, 0, self.test_street, 0, 0)
@@ -43,9 +39,7 @@ class TestParkingRecommender(unittest.TestCase):
     
     def test_Annual_Parking_Data_file(self):
         """Make sure normal call doesn't cause exception or errors"""
-        annual_parking = os.path.join(os.path.dirname(__file__),
-                    "../data/Annual_Parking_Study_Data_Cleaned2.csv")
-        pd.read_csv(annual_parking, low_memory = False)
+        pd.read_csv(self.filepath, low_memory = False)
         
     def test_raise_Invalid_Street_Error(self):
         """ParkingSpot list contains a street not in the database"""
@@ -78,10 +72,14 @@ class TestParkingRecommender(unittest.TestCase):
     def test_slice_by_hour_returns_previous_hour(self):
         """slice_by_hour returns drataframe sliced to previous hour
         when passed hour lacks data"""
-        pass
+        prev_hour_df = self.test_pr.initial_df[self.test_pr.initial_df['Hour'] == 20]
+        assert_frame_equal(prev_hour_df, self.test_pr.slice_by_hour(21))
 
     def test_slice_by_hour_returns_future_hour(self):
-        pass
+        """slice_by_hour returns dataframe sliced to next available hour
+        when passed hour lacks data"""
+        next_hour_df = self.test_pr.initial_df[self.test_pr.initial_df['Hour'] == 8]
+        assert_frame_equal(next_hour_df, self.test_pr.slice_by_hour(7))
                 
     def test_max_freespace(self):
         pass
