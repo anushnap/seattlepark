@@ -34,6 +34,7 @@ script:
    - coverage run -m unittest discover
 
 # generate a coverage report to send to back to user
+# exclude seattlepark/src/sea_street_parking_line because it is html
 after_success:
-   - coverage report
+   - coverage report --omit=seattlepark/src/sea_street_parking_line.py
    - coveralls
