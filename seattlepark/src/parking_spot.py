@@ -22,6 +22,5 @@ class ParkingSpot:
         self.street_lat_mid = street_lat_mid
         self.street_lon_mid = street_lon_mid
         self.spaceavail = 0
-        self.histo = None
 
 

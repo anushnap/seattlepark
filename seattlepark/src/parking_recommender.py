@@ -62,8 +62,6 @@ class ParkingRecommender:
 
         self.initial_df = self.slice_by_street()
 
-        self.hist = Histogram(self.initial_df)
-
     def slice_by_street(self):
         """
         Import the Parking Study dataset and filter it down to the streets
@@ -207,18 +205,16 @@ class ParkingRecommender:
                     # Fill in the .spaceavail attribute
                     self.initial_list[j].spaceavail = free_spaces_select[i]
 
-                    # Fill in the .histo attribute
-                    self.initial_list[j].histo = self.hist.createHistogram(select)
                     # Copy this entry over to the output list
                     output_list.append(self.initial_list[j])
                     break  # don't continue searching for "select" after found
 
-        # some debugging print statements
-        for i in range(len(output_list)):
-            print('%s: %4.1f spaces' % (
-                output_list[i].street_name,
-                output_list[i].spaceavail
-            )
-                  )
+        # # some debugging print statements
+        # for i in range(len(output_list)):
+        #     print('%s: %4.1f spaces' % (
+        #         output_list[i].street_name,
+        #         output_list[i].spaceavail
+        #     )
+        #           )
 
         return output_list
