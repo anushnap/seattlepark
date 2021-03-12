@@ -4,7 +4,7 @@ has is an init that assigns the parameters. Just writing in a bunch of
 useless tests anyway
 """
 import unittest
-from seattlepark.src.parking_spot import ParkingSpot
+from parking_spot import ParkingSpot
 
 
 class TestParkingSpotInit(unittest.TestCase):

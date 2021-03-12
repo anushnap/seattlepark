@@ -16,6 +16,7 @@ class CoordinatesUtil:
         key = self.decode_data('resources/google_map_api.key')
         # Initializing the geo location to the GoogleV3 in the constructor with the google api key extracted above
         self.geo_locator = GoogleV3(api_key=key)
+        self.sea_parking_geocode()
 
     def sea_parking_geocode(self):
         if self.coordinates_mapping and len(
@@ -42,8 +43,6 @@ class CoordinatesUtil:
                     dot_mid_street_log = mid_point[0]
                     self.coordinates_mapping[address] = [[line_latitudes, line_longitudes],
                                                          [dot_mid_street_lat, dot_mid_street_log]]
-
-            return self.coordinates_mapping  # {"address" : [ [line_latitudes, line_longitudes], [dot_lat, dot_log] ]}
 
     def get_parking_spots(self, destination_address, acceptable_distance):
         # return the coordinate of the user destination

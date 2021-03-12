@@ -24,7 +24,9 @@ install:
 # go into seattlepark folder
 # a list of commands to run before the main script
 before_script:
-    - export PYTHONPATH=$PYTHONPATH:"$PWD:/seattlepark/tests":"$PWD:/seattlepark/src"
+    - pwd
+    - ls -al
+    - export PYTHONPATH=$PYTHONPATH:"$PWD/seattlepark/tests":"$PWD/seattlepark/src"
 #    - flake8 -v seattlepark
 
 

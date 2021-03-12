@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import Mock, patch
-from seattlepark.src.coordinates_util import *
+from coordinates_util import *
 
 
 class Coordinate:

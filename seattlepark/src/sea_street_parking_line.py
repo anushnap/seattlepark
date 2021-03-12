@@ -6,9 +6,8 @@ import dash  # (version 1.11.0)
 from dash.dependencies import Input, Output, State
 from coordinates_util import CoordinatesUtil
 
-cu = CoordinatesUtil()
 print("Reading GeoJson Config..")
-cu.sea_parking_geocode()
+cu = CoordinatesUtil()
 
 # mapbox token
 mapbox_access_token = cu.decode_data('resources/mapbox_token')
