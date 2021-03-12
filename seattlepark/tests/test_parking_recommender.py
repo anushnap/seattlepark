@@ -12,13 +12,20 @@ from parking_spot import ParkingSpot
 
 class TestParkingRecommender(unittest.TestCase):
     def setUp(self):
+        """
+        Create test_df and ParkingRecommender with 1 address and 
+        2021/01/01 12:00:00 PM as time.
+        test_df created using Annual_Parking_Study_Data_Cleaned2.csv from
+        seattlepark/seattlepark/tests/data.
+        Dataframes created using ParkingRecommender will reference 
+        seattlepark/seattlepark/src/data.
+        """
         self.filepath = os.path.join(os.path.dirname(__file__),
-                            "../data/Annual_Parking_Study_Data_Cleaned2.csv")
+                            "data/Annual_Parking_Study_Data_Cleaned2.csv")
         self.test_df = pd.read_csv(self.filepath, low_memory = False)
-        self.test_pr = ParkingRecommender(
-            [ParkingSpot(0, 0, 'DEXTER AVE N BETWEEN WARD ST AND PROSPECT ST',
-                         0, 0)],
-            '2021-01-01 12:00:00')
+        self.test_street = 'DEXTER AVE N BETWEEN WARD ST AND PROSPECT ST'
+        self.test_ps = ParkingSpot(0, 0, self.test_street, 0, 0)
+        self.test_pr = ParkingRecommender([self.test_ps], '2021-01-01 12:00:00')
 
     """Testing the object constructor"""
     def test_raises_No_Parking_Spots_In_List_Error(self):
@@ -29,16 +36,16 @@ class TestParkingRecommender(unittest.TestCase):
 
     def test_raises_TypeError(self):
         """ParkingSpot is passed invalid datetime format"""
-        ps = [ParkingSpot(0, 0, '1ST AVE BETWEEN SENECA ST AND UNIVERSITY ST',
-                          0, 0)]
-        self.assertRaises((TypeError, ParserError), ParkingRecommender, ps, 
+        self.assertRaises((TypeError, ParserError), ParkingRecommender, self.test_ps, 
                           'Invalid datetime string')
-        self.assertRaises((TypeError, ValueError), ParkingRecommender, ps,
+        self.assertRaises((TypeError, ValueError), ParkingRecommender, self.test_ps,
                           '-1')
     
     def test_Annual_Parking_Data_file(self):
         """Make sure normal call doesn't cause exception or errors"""
-        pd.read_csv(self.filepath, low_memory = False)
+        annual_parking = os.path.join(os.path.dirname(__file__),
+                    "../data/Annual_Parking_Study_Data_Cleaned2.csv")
+        pd.read_csv(annual_parking, low_memory = False)
         
     def test_raise_Invalid_Street_Error(self):
         """ParkingSpot list contains a street not in the database"""
@@ -65,23 +72,17 @@ class TestParkingRecommender(unittest.TestCase):
     def test_raises_No_Search_Results_Error(self):
         """slice_by_hour raises NoSearchResultsError"""
         self.assertRaises(NoSearchResultsError, self.test_pr.slice_by_hour, 1)
+        self.assertRaises(NoSearchResultsError, self.test_pr.slice_by_hour, 5)
+        self.assertRaises(NoSearchResultsError, self.test_pr.slice_by_hour, 22)
 
-    def test_slice_by_hour_checks_previous_hour(self):
+    def test_slice_by_hour_returns_previous_hour(self):
+        """slice_by_hour returns drataframe sliced to previous hour
+        when passed hour lacks data"""
         pass
 
-    def test_slice_by_hour_checks_future_hour(self):
+    def test_slice_by_hour_returns_future_hour(self):
         pass
-            
-
-class TestMaxFreeSpace(unittest.TestCase):
-    """I can't actually think of any ways this method might fail lol"""
-    # @classmethod
-    # def setUpClass(cls):
-    #     parkingspotlist = [ParkingSpot(0, 0, 'DEXTER AVE N BETWEEN WARD ST AND PROSPECT ST',
-    #                       0, 0)]
-    #     datetimestring = '2020-02-04 01:46:29.315237'
-    #     testing_object = ParkingRecommender(parkingspotlist, datetimestring)
-    
+                
     def test_max_freespace(self):
         pass
         # self.assertEquals(testing_object.max_freespace(), (['DEXTER AVE N BETWEEN WARD ST AND PROSPECT ST'], [3]))
