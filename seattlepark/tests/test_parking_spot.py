@@ -24,6 +24,9 @@ class TestParkingSpotInit(unittest.TestCase):
         self.assertEqual(test_ps.street_lon_mid, 1)
         self.assertEqual(test_ps.spaceavail, 0)
 
+    def test_parking_spot_raises_Exception(self):
+        # Write test here about being passed empty street string?
+        pass
 
 if __name__ == "__main__":
     unittest.main()
