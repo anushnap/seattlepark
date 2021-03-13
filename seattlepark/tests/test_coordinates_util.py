@@ -4,6 +4,8 @@ from coordinates_util import CoordinatesUtil
 import pandas as pd
 import numpy as np
 import haversine as hs
+import base64
+import os
 
 class TestCoordinate:
 
@@ -75,6 +77,16 @@ class CoordinatesUtilTest(unittest.TestCase):
         coordinates = cu.get_destination_coordinates("Some Address")
         self.assertEqual(coordinates, [1.1, 1.2])
 
+    # SHOULD I TEST THIS? THIS BASICALLY ENDS UP DOING THE EXACT SAME CODE....
+    def test_decode_data(self):
+        path = os.path.join(os.path.dirname(__file__), "data/test_key.key")
+        key = self.cu.decode_data("../tests/data/test_key.key")
+        
+        with open(path) as handle:
+            encoded_bytes = handle.read().encode('ascii')
+            decoded_bytes = base64.b64decode(encoded_bytes)
+        
+        self.assertEqual(decoded_bytes.decode("ascii"), key)
 
 if __name__ == "__main__":
     unittest.main()
