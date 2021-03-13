@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import Mock, patch
-from coordinates_util import *
+from coordinates_util import CoordinatesUtil
 
 
 class Coordinate:
