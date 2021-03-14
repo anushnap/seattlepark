@@ -6,6 +6,7 @@ import numpy as np
 import haversine as hs
 import base64
 import os
+import sys
 
 class TestCoordinate:
 
@@ -35,20 +36,31 @@ class CoordinatesUtilTest(unittest.TestCase):
         self.assertEqual(hs.haversine(test_loc1, test_loc2, unit = "mi"),
                          self.cu.cal_distance(test_loc1, test_loc2))
 
-    def test_cal_distance_raises_value_error(self):
-        """Raise ValueError when passed iterables > 2"""
-
-        self.assertRaises(ValueError, 
-                          self.cu.cal_distance, (1, 2, 3), (1, 2, 3))
-        self.assertRaises(ValueError, 
-                          self.cu.cal_distance, [1, 2, 3], [1, 2, 3])
+    def test_cal_distance_catches_exception(self):
+        """Returns sys.maxsize when exception is raised"""
+        self.assertEqual(self.cu.cal_distance((1, 2, 3), (1, 2, 3)),
+                         sys.maxsize)
+        self.assertEqual(self.cu.cal_distance([1, 2, 3], [1, 2, 3]),
+                         sys.maxsize)
+        self.assertEqual(self.cu.cal_distance(('1', '2'), (1, 2)),
+                         sys.maxsize)
+        self.assertEqual(self.cu.cal_distance((1, 2), ('1', '2')),
+                         sys.maxsize)
     
-    def test_cal_distance_raises_type_error(self):
-        """Raise TypeError when passed strings"""
-        self.assertRaises(TypeError, 
-                          self.cu.cal_distance, ('1', '2'), (1, 2))
-        self.assertRaises(TypeError,
-                          self.cu.cal_distance, (1, 2), ('1', '2'))
+    # def test_cal_distance_raises_value_error(self):
+    #     """Raise ValueError when passed iterables > 2"""
+
+    #     self.assertRaises(ValueError, 
+    #                       self.cu.cal_distance, (1, 2, 3), (1, 2, 3))
+    #     self.assertRaises(ValueError, 
+    #                       self.cu.cal_distance, [1, 2, 3], [1, 2, 3])
+    
+    # def test_cal_distance_raises_type_error(self):
+    #     """Raise TypeError when passed strings"""
+    #     self.assertRaises(TypeError, 
+    #                       self.cu.cal_distance, ('1', '2'), (1, 2))
+    #     self.assertRaises(TypeError,
+    #                       self.cu.cal_distance, (1, 2), ('1', '2'))
 
     def test_get_parking_spots_returns_none(self):
         """get_parking_spots returns empty list when nothing meets critera"""
