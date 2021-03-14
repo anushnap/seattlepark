@@ -91,20 +91,27 @@ class TestParkingRecommender(unittest.TestCase):
         assert_frame_equal(next_hour_df, self.test_pr.slice_by_hour(7))
                 
     def test_max_freespace(self):
-        pass
-        # self.assertEquals(testing_object.max_freespace(), (['DEXTER AVE N BETWEEN WARD ST AND PROSPECT ST'], [3]))
+        self.assertEqual(self.test_pr.max_freespace(), (['DEXTER AVE N BETWEEN WARD ST AND PROSPECT ST'], [3]))
         
   
 class TestRecommend(unittest.TestCase):
-
+    def setUp(self):
+        self.filepath = os.path.join(os.path.dirname(__file__),
+                        "../data/Annual_Parking_Study_Data_Cleaned2.csv")
+        self.test_df = pd.read_csv(self.filepath, low_memory = False)
+        self.test_ps1 = ParkingSpot(
+            1, [[1, 3], [2, 4]], "1ST AVE BETWEEN SENECA ST AND UNIVERSITY ST", 1, 1)
+        self.test_ps2 = ParkingSpot(
+            1, [[1, 3], [2, 4]], 'DEXTER AVE N BETWEEN WARD ST AND PROSPECT ST', 1, 1)
+        self.test_pr = ParkingRecommender([self.test_ps1, self.test_ps2], '2021-01-01 12:00:00')
+        
     def test_recommend_raises_exception(self):
-        max_freespace = Mock()
-        max_freespace.return_value = ([], [])
+        pass
 
-    def test_output_list(self):
-        max_freespace = Mock()
-        max_freespace.return_value = ([], []) # put something to test here
-
+    def test_recommend(self):
+        return_list = self.test_pr.recommend()
+        self.assertEqual(return_list[0].street_name, self.test_ps1.street_name)
+        self.assertEqual(return_list[1].street_name, self.test_ps2.street_name)
 
 if __name__ == "__main__":
     unittest.main()
