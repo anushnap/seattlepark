@@ -5,3 +5,4 @@ src/__pycache__
 .coverage
 */__pycache__/*
 seattlepark.egg-info/
+seattlepark/src/histogram.py
