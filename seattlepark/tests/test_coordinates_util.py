@@ -50,11 +50,14 @@ class CoordinatesUtilTest(unittest.TestCase):
         self.assertRaises(TypeError,
                           self.cu.cal_distance, (1, 2), ('1', '2'))
 
-    # GET QIAOHUIS HELP
-    def test_get_destination_coordinates(self):
-        pass
+    def test_get_parking_spots_returns_none(self):
+        """get_parking_spots returns empty list when nothing meets critera"""
+        spots, white_house = self.cu.get_parking_spots(
+                "1600 Pennsylvania Avenue, N.W. Washington, DC 20500", 1)
+        self.assertEqual([], spots)
+        self.assertEqual(None, white_house)
 
-    def test_get_parking_spots(self):
+    def test_get_parking_spots_handles_exception(self):
         pass
 
     def test_sea_parking_geocode(self):

@@ -1,8 +1,3 @@
-"""
-I'm not actually sure if we need to do a unit test for a class where all it
-has is an init that assigns the parameters. Just writing in a bunch of 
-useless tests anyway
-"""
 import unittest
 from parking_spot import ParkingSpot
 
