@@ -46,22 +46,9 @@ class CoordinatesUtilTest(unittest.TestCase):
                          sys.maxsize)
         self.assertEqual(self.cu.cal_distance((1, 2), ('1', '2')),
                          sys.maxsize)
+        self.assertEqual(self.cu.cal_distance("(1, 2)", (1, 2)),
+                         sys.maxsize)
     
-    # def test_cal_distance_raises_value_error(self):
-    #     """Raise ValueError when passed iterables > 2"""
-
-    #     self.assertRaises(ValueError, 
-    #                       self.cu.cal_distance, (1, 2, 3), (1, 2, 3))
-    #     self.assertRaises(ValueError, 
-    #                       self.cu.cal_distance, [1, 2, 3], [1, 2, 3])
-    
-    # def test_cal_distance_raises_type_error(self):
-    #     """Raise TypeError when passed strings"""
-    #     self.assertRaises(TypeError, 
-    #                       self.cu.cal_distance, ('1', '2'), (1, 2))
-    #     self.assertRaises(TypeError,
-    #                       self.cu.cal_distance, (1, 2), ('1', '2'))
-
     def test_get_parking_spots_returns_none(self):
         """get_parking_spots returns empty list when nothing meets critera"""
         spots, white_house = self.cu.get_parking_spots(
@@ -86,7 +73,8 @@ class CoordinatesUtilTest(unittest.TestCase):
         cu = CoordinatesUtil()
         # Mock member variable geo_locator of CoordinatesUtil
         cu.geo_locator = Mock()
-        # Mock geocode on the mocked member variable geo_locator to return value as Coordinate(Point(1.1, 1.2)).
+        # Mock geocode on the mocked member variable geo_locator to return
+        # as Coordinate(Point(1.1, 1.2)).
         cu.geo_locator.geocode.return_value = TestCoordinate(1.1, 1.2)
 
         coordinates = cu.get_destination_coordinates("Some Address")
