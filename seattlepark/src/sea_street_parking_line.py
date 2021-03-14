@@ -66,8 +66,7 @@ layout = go.Layout(
     plot_bgcolor='rgb(204, 204, 204)'
 )
 
-# plotly.graph_objects.Figure: Create and add a new annotation to the
-# figure's layout.
+# plotly.graph_objects.Figure: Create and add a new annotation to the figure's layout.
 fig = go.Figure(data=maps, layout=layout)
 #####################################################################
 # This is the part to initiate Dash app
@@ -76,8 +75,7 @@ app = dash.Dash(__name__)
 
 app.layout = html.Div(children=[
     # html.H1: title
-    html.Div(html.H1("Seattle Parking"),
-             style={'text-align': 'center', 'color': 'blue'}),
+    html.Div(html.H1("Seattle Parking"), style={'text-align': 'center', 'color': 'blue'}),
     html.Div(children=[
         html.Div(children=[
             html.Div(children=[
@@ -99,8 +97,7 @@ app.layout = html.Div(children=[
                     type='text',
                     # value=0.5,
                     placeholder="Acceptable Distance (mi)".format("text"),
-                    # Regex: checks for integer, decimal.
-                    pattern=r"^[0-9]\d*(\.\d+)?$",
+                    pattern=r"^[0-9]\d*(\.\d+)?$",  # Regex: checks for integer, decimal.
                     debounce=True,
                     autoComplete="on",
                     inputMode='latin',
@@ -110,12 +107,15 @@ app.layout = html.Div(children=[
                 html.Br(),
                 html.Br(),
                 html.Button('Submit', id='submit', n_clicks=0),
-            ]),
-            html.Br(),
-            html.Div(id='message'),
+                html.Div([
+                    html.P(id="error", children=[""])  # Children as init updates the paragraph (html.P) at runtime.
+                ],
+                    style={'height': '30px', 'color': 'red'}
+                )
+            ],
+                style={'height': '400px', 'text-align': 'center', 'display': 'inline-block'}),
         ]
-            , style={'width': '25vh', 'display': 'inline-block',
-                     'text-align': 'center', 'vertical-align': 'top',
+            , style={'width': '20%', 'display': 'inline-block', 'text-align': 'center', 'vertical-align': 'top',
                      'margin-top': '100px', 'margin-left': '150px'}
         ),
         html.Div(
@@ -124,15 +124,13 @@ app.layout = html.Div(children=[
                 figure=fig,
                 style={"height": "95vh", "margin-top": "-20px"},
                 config={
-                    # removes map options from dcc graph
-                    'displayModeBar': False
+                    'displayModeBar': False  # removes map options from dcc graph
                 }
             )
-            , style={'width': '170vh', 'display': 'inline-block',
-                     'margin-right': '-20vh'}
+            , style={'width': '70%', 'display': 'inline-block', 'margin-right': '-20vh'}
         ),
-    ],
-        style={'width': '195vh', 'display': 'inline-block'}
+    ]
+        , style={'width': '100%', 'display': 'inline-block'}
     ),
 
     html.Div(children='''
@@ -143,33 +141,46 @@ app.layout = html.Div(children=[
 
 
 # ------------------------------------------------------------------------
-# By writing this decorator, we're telling Dash to call this function for us
-# whenever the value of the "input" component (the text box) changes in order
-# to update the children of the "output" component on the page (the HTML div)
-# Whenever an input property changes, the function that the callback decorator
-# wraps will get called automatically. Dash provides the function with the new
-# value of the input property as an input argument and Dash updates the
-# property of the output component with whatever was returned by the function.
+# By writing this decorator, we're telling Dash to call this function for us whenever the value of the "input"
+# component (the text box) changes in order to update the children of the "output" component on the page
+# (the HTML div)
+# Whenever an input property changes, the function that the callback decorator wraps will get called automatically.
+# Dash provides the function with the new value of the input property as an input argument and
+# Dash updates the property of the output component with whatever was returned by the function.
 
 @app.callback(
-    Output(component_id='seattle_street_map', component_property='figure'),
-    # The updated streets are passed to this component_ID: seattle_street_map,
-    # which updates the map with the recommended streets
-    [Input(component_id='submit', component_property='n_clicks')],
-    # component_property: the type of input field
+    Output(component_id='seattle_street_map', component_property='figure'),  # The updated streets are passed to
+    # this component_ID: seattle_street_map, which updates the map with the recommended streets
+    Output("error", "children"),
+    [Input(component_id='submit', component_property='n_clicks')],  # component_property: the type of input field
     state=[State(component_id='destination', component_property='value'),
            State(component_id='accept_distance', component_property='value')]
 )
 def submit_data(n_clicks, destination, accept_distance):
-    if destination and accept_distance:
-        # if both strings are not none and not blank,
-        # i.e. they are valid strings
+    if destination and accept_distance:  # if both strings are not none and not blank, i.e. they are valid strings
         if n_clicks > 0:
             top_spots_on_map = []
-            spots, destination_coordinates = \
-                cu.get_parking_spots(destination, accept_distance)
-            # return the list of the objects that contains the streets info
-            # and the coordinates of the destination as tuple.
+            spots, destination_coordinates = cu.get_parking_spots(destination, accept_distance)
+            if not destination_coordinates:
+                return {
+                           "data": [
+                               {
+                                   "type": "scattermapbox",
+                                   "lat": [],
+                                   "lon": [],
+                                   "hoverinfo": "text",
+                                   "mode": "lines",
+                                   "marker": {
+                                       "size": 4,
+                                       "color": "green"
+                                   },
+                                   "visible": True
+                               }
+                           ],
+                           "layout": layout
+                       }, "Input Address is Invalid!"
+            # return the list of the objects that contains the streets info and the coordinates of the destination as
+            # tuple.
             for spot in spots:
                 lats = spot.street_meet_expect_coordinates[0]
                 longs = spot.street_meet_expect_coordinates[1]
@@ -219,45 +230,45 @@ def submit_data(n_clicks, destination, accept_distance):
                 }
             )
             return {
-                "data": top_spots_on_map,
-                "layout": layout
-            }
+                       "data": top_spots_on_map,
+                       "layout": layout
+                   }, ""
         else:
             return {
-                "data": [
-                    {
-                        "type": "scattermapbox",
-                        "lat": [],
-                        "lon": [],
-                        "hoverinfo": "text",
-                        "mode": "lines",
-                        "marker": {
-                            "size": 4,
-                            "color": "green"
-                        },
-                        "visible": True
-                    }
-                ],
-                "layout": layout
-            }
+                       "data": [
+                           {
+                               "type": "scattermapbox",
+                               "lat": [],
+                               "lon": [],
+                               "hoverinfo": "text",
+                               "mode": "lines",
+                               "marker": {
+                                   "size": 4,
+                                   "color": "green"
+                               },
+                               "visible": True
+                           }
+                       ],
+                       "layout": layout
+                   }, ""
     else:
         return {
-            "data": [
-                {
-                    "type": "scattermapbox",
-                    "lat": [],
-                    "lon": [],
-                    "hoverinfo": "text",
-                    "mode": "lines",
-                    "marker": {
-                        "size": 4,
-                        "color": "green"
-                    },
-                    "visible": True
-                }
-            ],
-            "layout": layout
-        }
+                   "data": [
+                       {
+                           "type": "scattermapbox",
+                           "lat": [],
+                           "lon": [],
+                           "hoverinfo": "text",
+                           "mode": "lines",
+                           "marker": {
+                               "size": 4,
+                               "color": "green"
+                           },
+                           "visible": True
+                       }
+                   ],
+                   "layout": layout
+               }, ""
 
 
 # ------------------------------------------------------------------------

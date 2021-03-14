@@ -1,5 +1,7 @@
 import json
 import os
+import sys
+
 from geopy import GoogleV3
 import haversine as hs
 
@@ -51,8 +53,15 @@ class CoordinatesUtil:
     def get_parking_spots(self, destination_address, acceptable_distance):
         # return the coordinate of the user destination
         distance = float(acceptable_distance)
-        destination_coordinates = \
-            self.get_destination_coordinates(destination_address)
+
+        destination_coordinates = None
+        try:
+            destination_coordinates = (self.get_destination_coordinates(destination_address))
+            print(f"Destination Coordinates: {destination_coordinates}")
+        except Exception:
+            print(f"Invalid Destination: {destination_address}")
+            return [], None
+
         street_meet_expect = []
         for street in self.sea_parking_geocode():
             street_mid_coordinates = self.coordinates_mapping[street][1]
@@ -86,13 +95,15 @@ class CoordinatesUtil:
 
     def get_destination_coordinates(self, destination_address):
         coordinates = self.geo_locator.geocode(destination_address)
-        print(coordinates)
         return [coordinates.latitude, coordinates.longitude]
 
-    def cal_distance(self, coordinates1, coordinate2):
+    def cal_distance(self, coordinates1, coordinates2):
         # return the distance between coordinates1 and coordinates2
-        calculated_distance = \
-            hs.haversine(coordinates1, coordinate2, unit="mi")
+        calculated_distance = 0
+        try:
+            calculated_distance = hs.haversine(coordinates1, coordinates2, unit="mi")
+        except Exception:
+            return sys.maxsize
         return calculated_distance
 
     def decode_data(self, file_location):
