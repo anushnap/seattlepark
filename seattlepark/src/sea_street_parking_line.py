@@ -148,6 +148,7 @@ app.layout = html.Div(children=[
 # Dash provides the function with the new value of the input property as an input argument and
 # Dash updates the property of the output component with whatever was returned by the function.
 
+
 @app.callback(
     Output(component_id='seattle_street_map', component_property='figure'),  # The updated streets are passed to
     # this component_ID: seattle_street_map, which updates the map with the recommended streets
@@ -157,6 +158,26 @@ app.layout = html.Div(children=[
            State(component_id='accept_distance', component_property='value')]
 )
 def submit_data(n_clicks, destination, accept_distance):
+    """
+    This function refreshes the map when the submit button is clicked with user input destination address and
+    acceptable distance.
+
+    Parameters
+    ----------
+    n_clicks: integer
+        the number of the submit button got clicked.
+
+    destination: str
+        the user input destination address.
+
+    accept_distance: str
+        the user input of acceptable walking distance from the destination address.
+
+    Returns
+    -------
+    JSON
+        recommended parking spots to be marked on the scatter mapbox.
+    """
     if destination and accept_distance:  # if both strings are not none and not blank, i.e. they are valid strings
         if n_clicks > 0:
             top_spots_on_map = []

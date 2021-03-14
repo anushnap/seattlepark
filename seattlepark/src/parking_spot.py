@@ -1,26 +1,48 @@
-# This class is to make sure the calculated distance and coordinates are
-# connected to the same object. Everything in the class became one entity.
-# If you sort the objects based on the values of one class member, then
-# other class members will also be sorted accordingly.
-# In this way, we can sort the list of the objects by the calculated distance
-# and the coordinates will also be sorted accordingly.
-
-# distance: the calculated distance between destination and this potential
-#   parking spot.
-# coordinates: the coordinates of the start and end of this potential
-#   parking street.
-#   e.x.: If the start and end coordinates of the street are (1,2) and
-#   (3,4), where 1 and 3 are latitude and 2 and 4 are longitude. Then the
-#   coordinates field will look like [[1,3], [2,4]]. This is the
-#   format which plotly uses to show a street on a map.
-# street_name : the street address.
-# street_lat_mid: the latitude of the middle point of this street.
-# street_lon_mid: the longitude of the middle point of this street.
-# spaceavail: estimated # of available spots (set by ParkingRecommender)
-# histo: html string for displaying histogram (set by Histogram)
 class ParkingSpot:
+    """
+    This class represents a parking spot on the map.
+
+    Attributes
+    ----------
+    distance: float
+        the calculated distance between destination and this potential parking spot.
+
+    coordinates: list
+        the coordinates of the start and end of this potential parking street.
+
+    street_name: str
+        the street address.
+
+    street_lat_mid: float
+        the latitude of the middle point of this street.
+
+    street_lon_mid: float
+        the longitude of the middle point of this street.
+
+    spaceavail: integer
+        provide the number of spaces that are available in a parking street.
+
+    """
     def __init__(self, distance, coordinates, street_name,
                  street_lat_mid, street_lon_mid):
+        """
+        Parameters
+        ----------
+        distance: float
+            the calculated distance between destination and this potential parking spot.
+
+        coordinates: list
+            the coordinates of the start and end of this potential parking street.
+
+        street_name: str
+            the street address.
+
+        street_lat_mid: float
+            the latitude of the middle point of this street.
+
+        street_lon_mid: float
+            the longitude of the middle point of this street.
+        """
         self.calculated_distance = distance
         self.street_meet_expect_coordinates = coordinates
         self.street_name = street_name
