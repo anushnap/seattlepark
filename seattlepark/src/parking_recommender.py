@@ -1,17 +1,17 @@
 # Class ParkingRecommender
-# This class defines a ParkingRecommender object that is initialized with a 
+# This class defines a ParkingRecommender object that is initialized with a
 # list of ParkingSpot objects and a datetime (as a string), which are stored
 # as class attributes.
 
 # IMPORTANT NOTE!!!!
-# This replaces the slice_df.py, max_freespace.py, and where_to_park.py 
+# This replaces the slice_df.py, max_freespace.py, and where_to_park.py
 # modules! So don't use those anymore.
 
-# The __init__ method is the constructor of the ParkingRecommender object 
-# and parses the datetime input and filters the full parking study dataset 
+# The __init__ method is the constructor of the ParkingRecommender object
+# and parses the datetime input and filters the full parking study dataset
 # down to just the streets in the ParkingSpot list, using method slice_df().
 
-# The max_freespace method uses that filtered dataset and returns the 5 
+# The max_freespace method uses that filtered dataset and returns the 5
 # streets with the highest estimated parking availability, based on average
 # observed availability from the parking study data.
 
@@ -21,13 +21,12 @@
 # "dt" is a datetime string such as '2020-02-04 12:46:29.315237'
 # pr = ParkingRecommender(ps,dt)
 # output = pr.recommend()
-# Here, output is a list of 5 ParkingSpot objects, with their .spaceavail 
+# Here, output is a list of 5 ParkingSpot objects, with their .spaceavail
 # attributes filled in.
 
 import os
 import numpy as np
 import pandas as pd
-from histogram import Histogram
 
 
 class NoParkingSpotsInListError(Exception):
@@ -47,7 +46,7 @@ class ParkingRecommender:
         """
         parkingspotlist is a List object containing ParkingSpot objects, the
         output of the coordinates_util module.
-        datetimestr is the user's requested date/time for parking data 
+        datetimestr is the user's requested date/time for parking data
         (computer time at time request is made?)
         """
         self.initial_list = parkingspotlist
