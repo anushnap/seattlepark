@@ -21,7 +21,7 @@ class CoordinatesUtilTest(unittest.TestCase):
         self.cu = CoordinatesUtil()
         self.uw_suzallo_address = '4000 15th Ave NE, Seattle, WA 98105'
         self.uw_suzallo_coord = [47.6608248, -122.3065227]
-        
+
     def test_json_file_loads(self):
         """Normal call of json file does not raise issues or exceptions"""
         filepath = os.path.join(
