@@ -26,7 +26,7 @@ class CoordinatesUtilTest(unittest.TestCase):
                 os.path.dirname(__file__),
                 '../src/resources/Midpoints_and_LineCoords.json')
         with open(filepath):
-            pass
+            print("Was able to open " + filepath)
 
     def test_key_file_loads(self):
         """Normal call of encoded key file does not raise exceptions"""
@@ -35,7 +35,7 @@ class CoordinatesUtilTest(unittest.TestCase):
             '../src/resources/google_map_api.key')
 
         with open(filepath):
-            pass
+            print("Was able to open " + filepath)
 
     def test_cal_distance(self):
         """Calcs haversine distance on tuple"""
@@ -73,8 +73,21 @@ class CoordinatesUtilTest(unittest.TestCase):
         self.assertEqual([], spots)
         self.assertEqual(None, white_house)
 
+        spots, invalid_address  = self.cu.get_parking_spots(
+            "This is not an address", 1
+        )
+        self.assertEqual([], spots)
+        self.assertEqual(None, invalid_address)
+
     def test_get_parking_spots_handles_exception(self):
-        pass
+        """get_parking_spots returns empty list when passed invalid address"""
+        spots, invalid_address  = self.cu.get_parking_spots("Not an address", 1)
+        self.assertEqual([], spots)
+        self.assertEqual(None, invalid_address)
+
+    def test_get_parking_spots(self):
+        """get_parking_spots returns expected results for valid inputs"""
+        
 
     def test_sea_parking_geocode(self):
         """Test validity of key, value pairs of coordinates_mapping"""
@@ -99,6 +112,7 @@ class CoordinatesUtilTest(unittest.TestCase):
         self.assertDictEqual(test_dict, self.cu.sea_parking_geocode())
 
     def test_get_destination_coordinates(self):
+        """get_destination_coordinates returns expected lat/longs"""
         cu = CoordinatesUtil()
         # Mock member variable geo_locator of CoordinatesUtil
         cu.geo_locator = Mock()
@@ -108,6 +122,11 @@ class CoordinatesUtilTest(unittest.TestCase):
 
         coordinates = cu.get_destination_coordinates("Some Address")
         self.assertEqual(coordinates, [1.1, 1.2])
+
+        uw_suzallo_address = '4000 15th Ave NE, Seattle, WA 98105'
+        uw_suzallo_coord = [47.6608248, -122.3065227]
+        self.assertEqual(uw_suzallo_coord, 
+                         self.cu.get_destination_coordinates(uw_suzallo_address))
 
     # SHOULD I TEST THIS? THIS BASICALLY ENDS UP DOING THE EXACT SAME CODE....
     def test_decode_data(self):
