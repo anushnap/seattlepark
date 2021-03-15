@@ -74,8 +74,7 @@ class CoordinatesUtilTest(unittest.TestCase):
             "1600 Pennsylvania Avenue, N.W. Washington, DC 20500", 1)
         self.assertEqual([], spots)
         self.assertEqual(None, white_house)
-
-        spots, invalid_address  = self.cu.get_parking_spots(
+        spots, invalid_address = self.cu.get_parking_spots(
             "This is not an address", 1
         )
         self.assertEqual([], spots)
@@ -83,7 +82,7 @@ class CoordinatesUtilTest(unittest.TestCase):
 
     def test_get_parking_spots_handles_exception(self):
         """get_parking_spots returns empty list when passed invalid address"""
-        spots, invalid_coord  = self.cu.get_parking_spots("Not an address", 1)
+        spots, invalid_coord = self.cu.get_parking_spots("Not an address", 1)
         self.assertEqual([], spots)
         self.assertEqual(None, invalid_coord)
 
@@ -127,7 +126,7 @@ class CoordinatesUtilTest(unittest.TestCase):
         self.assertEqual(coordinates, [1.1, 1.2])
 
         self.assertEqual(
-            self.uw_suzallo_coord, 
+            self.uw_suzallo_coord,
             self.cu.get_destination_coordinates(self.uw_suzallo_address)
         )
 
