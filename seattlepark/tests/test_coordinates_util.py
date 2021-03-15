@@ -1,12 +1,11 @@
 import unittest
 from unittest.mock import Mock
 from coordinates_util import CoordinatesUtil
-import pandas as pd
-import numpy as np
 import haversine as hs
 import base64
 import os
 import sys
+import pandas as pd
 
 
 class TestCoordinate:
@@ -24,8 +23,8 @@ class CoordinatesUtilTest(unittest.TestCase):
     def test_json_file_loads(self):
         """Normal call of json file does not raise issues or exceptions"""
         filepath = os.path.join(
-            os.path.dirname(__file__),
-            '../src/resources/Midpoints_and_LineCoords.json')
+                os.path.dirname(__file__),
+                '../src/resources/Midpoints_and_LineCoords.json')
         with open(filepath) as json:
             pass
 
@@ -34,6 +33,7 @@ class CoordinatesUtilTest(unittest.TestCase):
         filepath = os.path.join(
             os.path.dirname(__file__),
             '../src/resources/google_map_api.key')
+
         with open(filepath) as key:
             pass
 
@@ -77,6 +77,12 @@ class CoordinatesUtilTest(unittest.TestCase):
         pass
 
     def test_sea_parking_geocode(self):
+        """Test validity of key, value pairs of coordinates_mapping"""
+        filepath = os.path.join(
+                os.path.dirname(__file__),
+                '../data/Annual_Parking_Study_Data_Cleaned2.csv')
+        parking_data = pd.read_csv(filepath, low_memory=False)
+        streets = parking_data['Unitdesc'].unique()
         coordinates_mapping = self.cu.sea_parking_geocode()
         self.assertTrue(len(coordinates_mapping) > 0)
         for key, value in coordinates_mapping.items():
@@ -85,6 +91,7 @@ class CoordinatesUtilTest(unittest.TestCase):
             self.assertEqual(len(value), 2)
             self.assertEqual(len(value[0]), 2)
             self.assertEqual(len(value[1]), 2)
+            self.assertTrue(key in streets)
 
     def test_sea_parking_geocode_returns_coordinates_mapping(self):
         test_dict = {'List': [1, 2, 3], 'List 2': [2, 3, 4]}
