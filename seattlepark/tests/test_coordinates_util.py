@@ -10,12 +10,14 @@ import sys
 
 class TestCoordinate:
 
+
     def __init__(self, lat, long):
         self.latitude = lat
         self.longitude = long
 
 
 class CoordinatesUtilTest(unittest.TestCase):
+
 
     def setUp(self):
         self.cu = CoordinatesUtil()
