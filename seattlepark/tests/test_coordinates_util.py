@@ -20,6 +20,20 @@ class CoordinatesUtilTest(unittest.TestCase):
     def setUp(self):
         self.cu = CoordinatesUtil()
     
+    def test_json_file_loads(self):
+        """Normal call of json file does not raise issues or exceptions"""
+        filepath = os.path.join(os.path.dirname(__file__),
+                            '../src/resources/Midpoints_and_LineCoords.json')
+        with open(filepath) as json:
+            pass
+
+    def test_key_file_loads(self):
+        """Normal call of encoded key file does not raise exceptions"""
+        filepath = os.path.join(os.path.dirname(__file__),
+                            '../src/resources/google_map_api.key')
+        with open(filepath) as key:
+            pass
+
     def test_cal_distance(self):
         """Calcs haversine distance on tuple"""
         test_loc1 = (45.8, 4.8)
