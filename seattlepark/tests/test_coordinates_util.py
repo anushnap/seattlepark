@@ -19,7 +19,9 @@ class CoordinatesUtilTest(unittest.TestCase):
 
     def setUp(self):
         self.cu = CoordinatesUtil()
-
+        self.uw_suzallo_address = '4000 15th Ave NE, Seattle, WA 98105'
+        self.uw_suzallo_coord = [47.6608248, -122.3065227]
+        
     def test_json_file_loads(self):
         """Normal call of json file does not raise issues or exceptions"""
         filepath = os.path.join(
@@ -81,13 +83,14 @@ class CoordinatesUtilTest(unittest.TestCase):
 
     def test_get_parking_spots_handles_exception(self):
         """get_parking_spots returns empty list when passed invalid address"""
-        spots, invalid_address  = self.cu.get_parking_spots("Not an address", 1)
+        spots, invalid_coord  = self.cu.get_parking_spots("Not an address", 1)
         self.assertEqual([], spots)
-        self.assertEqual(None, invalid_address)
+        self.assertEqual(None, invalid_coord)
 
     def test_get_parking_spots(self):
         """get_parking_spots returns expected results for valid inputs"""
-        
+        spots, coords = self.cu.get_parking_spots(self.uw_suzallo_address, 1)
+        self.assertEqual(self.uw_suzallo_coord, coords)
 
     def test_sea_parking_geocode(self):
         """Test validity of key, value pairs of coordinates_mapping"""
@@ -123,10 +126,10 @@ class CoordinatesUtilTest(unittest.TestCase):
         coordinates = cu.get_destination_coordinates("Some Address")
         self.assertEqual(coordinates, [1.1, 1.2])
 
-        uw_suzallo_address = '4000 15th Ave NE, Seattle, WA 98105'
-        uw_suzallo_coord = [47.6608248, -122.3065227]
-        self.assertEqual(uw_suzallo_coord, 
-                         self.cu.get_destination_coordinates(uw_suzallo_address))
+        self.assertEqual(
+            self.uw_suzallo_coord, 
+            self.cu.get_destination_coordinates(self.uw_suzallo_address)
+        )
 
     # SHOULD I TEST THIS? THIS BASICALLY ENDS UP DOING THE EXACT SAME CODE....
     def test_decode_data(self):
