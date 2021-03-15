@@ -36,5 +36,5 @@ script:
 # generate a coverage report to send to back to user
 # exclude seattlepark/src/sea_street_parking_line because it is html
 after_success:
-   - coverage report --omit=seattlepark/src/sea_street_parking_line.py
+   - coverage report --omit=seattlepark/src/parking_app.py
    - coveralls

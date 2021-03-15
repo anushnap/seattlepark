@@ -102,12 +102,12 @@ class ParkingRecommender:
         # check if there were any results
         if df_this_hour.shape[0] == 0:
             # no observations at specified hour, try one hour later
-            print('no results at %d' % req_hr)
+            # print('no results at %d' % req_hr)
             if req_hr < 23:
                 new_hr = req_hr + 1
             else:  # there is no hour 24, wraps around to 0
                 new_hr = 0
-            print('trying %d' % new_hr)
+            # print('trying %d' % new_hr)
             df_this_hour = self.initial_df[
                 self.initial_df['Hour'] == new_hr
             ]
@@ -115,12 +115,12 @@ class ParkingRecommender:
         # check again to see if that worked
         if df_this_hour.shape[0] == 0:
             # still no observations, try one hour earlier
-            print('no results at %d' % new_hr)
+            # print('no results at %d' % new_hr)
             if req_hr > 0:
                 new_hr = req_hr - 1
             else:  # there is no hour -1, wraps around to 23
                 new_hr = 23
-            print('trying %d' % new_hr)
+            # print('trying %d' % new_hr)
             df_this_hour = self.initial_df[
                 self.initial_df['Hour'] == new_hr
             ]
@@ -128,7 +128,7 @@ class ParkingRecommender:
         # check again to see if that worked
         if df_this_hour.shape[0] == 0:
             # still no observations, raise an error that we can catch
-            print('no results at %d' % new_hr)
+            # print('no results at %d' % new_hr)
             raise NoSearchResultsError
         else:
             return df_this_hour
@@ -181,9 +181,9 @@ class ParkingRecommender:
                              key=lambda x: x.calculated_distance,
                              reverse=False)
             n_entries = min(len(self.initial_list), num_returns)
-            print('Returning %d closest spots' % n_entries)
-            for i in range(n_entries):
-                print(newlist[i].street_name)
+            # print('Returning %d closest spots' % n_entries)
+            # for i in range(n_entries):
+            #     print(newlist[i].street_name)
             return newlist[0:n_entries]
 
         # Assuming no exception was raised:

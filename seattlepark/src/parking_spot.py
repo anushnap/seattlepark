@@ -5,7 +5,8 @@ class ParkingSpot:
     Attributes
     ----------
     distance: float
-        the calculated distance between destination and this potential parking spot.
+        the calculated distance between destination and this potential
+        parking spot.
 
     coordinates: list
         the coordinates of the start and end of this potential parking street.
@@ -29,10 +30,12 @@ class ParkingSpot:
         Parameters
         ----------
         distance: float
-            the calculated distance between destination and this potential parking spot.
+            the calculated distance between destination and this potential
+            parking spot.
 
         coordinates: list
-            the coordinates of the start and end of this potential parking street.
+            the coordinates of the start and end of this potential parking
+            street.
 
         street_name: str
             the street address.

@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import Mock
 from parking_spot import ParkingSpot
-from sea_street_parking_line import create_parking_spots
+from parking_app import create_parking_spots
 
 
 class StreetParkingUITest(unittest.TestCase):
@@ -34,7 +34,9 @@ class StreetParkingUITest(unittest.TestCase):
 
         cu.get_parking_spots.return_value = (spots, destination_coordinates)
 
-        streets, notification = create_parking_spots(n_clicks, destination, accept_distance, layout, cu)
+        streets, notification = \
+            create_parking_spots(n_clicks,
+                                 destination, accept_distance, layout, cu)
 
         data = streets["data"]
         lat1 = data[0]["lat"]
@@ -56,7 +58,9 @@ class StreetParkingUITest(unittest.TestCase):
         layout = Mock()
         cu = Mock()
 
-        streets, notification = create_parking_spots(n_clicks, destination, accept_distance, layout, cu)
+        streets, notification = \
+            create_parking_spots(n_clicks,
+                                 destination, accept_distance, layout, cu)
         data = streets["data"]
         lat = data[0]["lat"]
         lon = data[0]["lon"]
@@ -90,7 +94,9 @@ class StreetParkingUITest(unittest.TestCase):
 
         cu.get_parking_spots.return_value = (spots, destination_coordinates)
 
-        streets, notification = create_parking_spots(n_clicks, destination, accept_distance, layout, cu)
+        streets, notification = \
+            create_parking_spots(n_clicks,
+                                 destination, accept_distance, layout, cu)
 
         data = streets["data"]
         lat = data[0]["lat"]
@@ -109,7 +115,9 @@ class StreetParkingUITest(unittest.TestCase):
 
         cu.get_parking_spots.return_value = (spots, destination_coordinates)
 
-        streets, notification = create_parking_spots(n_clicks, destination, accept_distance, layout, cu)
+        streets, notification = \
+            create_parking_spots(n_clicks,
+                                 destination, accept_distance, layout, cu)
 
         data = streets["data"]
         lat = data[0]["lat"]
@@ -128,7 +136,9 @@ class StreetParkingUITest(unittest.TestCase):
 
         cu.get_parking_spots.return_value = (spots, destination_coordinates)
 
-        streets, notification = create_parking_spots(n_clicks, destination, accept_distance, layout, cu)
+        streets, notification = \
+            create_parking_spots(n_clicks,
+                                 destination, accept_distance, layout, cu)
 
         data = streets["data"]
         lat = data[0]["lat"]
