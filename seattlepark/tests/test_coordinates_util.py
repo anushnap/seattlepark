@@ -83,6 +83,11 @@ class CoordinatesUtilTest(unittest.TestCase):
             self.assertEqual(len(value[0]), 2)
             self.assertEqual(len(value[1]), 2)
 
+    def test_sea_parking_geocode_returns_coordinates_mapping(self):
+        test_dict = {'List': [1, 2, 3], 'List 2': [2, 3, 4]}
+        self.cu.coordinates_mapping = test_dict
+        self.assertDictEqual(test_dict, self.cu.sea_parking_geocode())
+
     def test_get_destination_coordinates(self):
         cu = CoordinatesUtil()
         # Mock member variable geo_locator of CoordinatesUtil
