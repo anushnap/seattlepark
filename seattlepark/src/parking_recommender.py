@@ -184,7 +184,7 @@ class ParkingRecommender:
             # print('Returning %d closest spots' % n_entries)
             # for i in range(n_entries):
             #     print(newlist[i].street_name)
-            # return newlist[0:n_entries]
+            return newlist[0:n_entries]
 
         # Assuming no exception was raised:
         sort_index = np.argsort(free_spaces)
