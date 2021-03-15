@@ -115,7 +115,7 @@ class ParkingRecommender:
         # check again to see if that worked
         if df_this_hour.shape[0] == 0:
             # still no observations, try one hour earlier
-            print('no results at %d' % new_hr)
+            # print('no results at %d' % new_hr)
             if req_hr > 0:
                 new_hr = req_hr - 1
             else:  # there is no hour -1, wraps around to 23
