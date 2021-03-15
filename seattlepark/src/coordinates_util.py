@@ -22,7 +22,8 @@ class CoordinatesUtil:
         1) a list of coordinates of start and end of a street
         2) mid-point of a street
     geo_locator: Instance of GoogleV3
-        GoogleV3 is a class of library geopy. It helps to get the coordinates of the user input destination address.
+        GoogleV3 is a class of library geopy. It helps to get the coordinates
+        of the user input destination address.
 
     Methods
     -------
@@ -30,13 +31,16 @@ class CoordinatesUtil:
         Load the json file and return the coordinates_mapping.
 
     get_parking_spots(destination_address, acceptable_distance)
-        Return the top 5 recommended parking spots and the coordinates of the user input destination address.
+        Return the top 5 recommended parking spots and the coordinates of the
+        user input destination address.
 
     get_destination_coordinates(destination_address)
-        Using Google Map API to return the coordinates of the user input destination address.
+        Using Google Map API to return the coordinates of the user input
+        destination address.
 
     cal_distance(coordinates1, coordinates2)
-        Calculate the distance between the user input destination and each parking street.
+        Calculate the distance between the user input destination and each
+        parking street.
         Return the calculated distance.
 
     decode_data(file_location)
@@ -85,7 +89,8 @@ class CoordinatesUtil:
 
     def get_parking_spots(self, destination_address, acceptable_distance):
         """
-        Return the top 5 recommended parking spots and the coordinates of the user input destination address.
+        Return the top 5 recommended parking spots and the coordinates of the
+        user input destination address.
 
         Parameters
         ----------
@@ -93,25 +98,31 @@ class CoordinatesUtil:
             User input destination address
 
         acceptable_distance: int or float, required
-            User input acceptable walking distance from the destination address.
+            User input acceptable walking distance from the destination
+            address.
 
         Returns
         -------
         Tuple
-            if an Exception occurs when the user input destination is invalid or the ParkingRecommender class doesn't
-            return any recommended parking spot;
-            or if all calculated distance between the destination address and each parking street is greater than
-            the acceptable walking distance entered by the user,
+            if an Exception occurs when the user input destination is invalid
+            or the ParkingRecommender class doesn't return any recommended
+            parking spot;
+            or if all calculated distance between the destination address and
+            each parking street is greater than the acceptable walking
+            distance entered by the user,
             then return a tuple of empty list and None.
 
-            Otherwise, return the top 5 recommended parking spots and the coordinates of the user input destination
+            Otherwise, return the top 5 recommended parking spots and the
+            coordinates of the user input destination
             address.
         """
 
         distance = float(acceptable_distance)
 
         try:
-            destination_coordinates = self.get_destination_coordinates(destination_address)
+            destination_coordinates = self.get_destination_coordinates(
+                destination_address
+            )
             print(f"Destination Coordinates: {destination_coordinates}")
         except Exception:
             print(f"Invalid Destination: {destination_address}")
@@ -148,7 +159,8 @@ class CoordinatesUtil:
 
     def get_destination_coordinates(self, destination_address):
         """
-        Using Google Map API to return the coordinates of the user input destination address.
+        Using Google Map API to return the coordinates of the user input
+        destination address.
 
         Parameters
         ----------
@@ -158,14 +170,16 @@ class CoordinatesUtil:
         Returns
         -------
         list
-            a list of the latitude and longitude of the user input destination address.
+            a list of the latitude and longitude of the user input
+            destination address.
         """
         coordinates = self.geo_locator.geocode(destination_address)
         return [coordinates.latitude, coordinates.longitude]
 
     def cal_distance(self, coordinates1, coordinates2):
         """
-        Calculate the distance between the user input destination and each parking street.
+        Calculate the distance between the user input destination and each
+        parking street.
         Return the calculated distance.
 
         Parameters
@@ -179,16 +193,21 @@ class CoordinatesUtil:
         Returns
         -------
         float
-            if an Exception occurs, return the system max size as calculated distance
-            between coordinates1 and coordinates2.
+            if an Exception occurs, return the system max size as calculated
+            distance between coordinates1 and coordinates2.
 
-            otherwise, return the distance between coordinates1 and coordinates2 in miles.
+            otherwise, return the distance between coordinates1 and
+            coordinates2 in miles.
         """
         try:
-            calculated_distance = hs.haversine(coordinates1, coordinates2, unit="mi")
+            calculated_distance = hs.haversine(
+                coordinates1, coordinates2, unit="mi"
+            )
         except Exception:
-            return sys.maxsize  # In case of exception in calculating the distance between two coordinates, default the
-            # calculated distance to max size to filter the coordinate out.
+            return sys.maxsize
+            # In case of exception in calculating the distance between two
+            # coordinates, default the calculated distance to max size to
+            # filter the coordinate out.
         return calculated_distance
 
     def decode_data(self, file_location):
