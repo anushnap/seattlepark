@@ -1,163 +1,168 @@
 # -*- coding: utf-8 -*-
-import plotly.graph_objects as go
+import dash  # (version 1.11.0)
 import dash_core_components as dcc
 import dash_html_components as html
-import dash  # (version 1.11.0)
+import plotly.graph_objects as go
 from dash.dependencies import Input, Output, State
+
 from coordinates_util import CoordinatesUtil
 
-print("Reading GeoJson Config..")
-cu = CoordinatesUtil()
 
-# mapbox token
-mapbox_access_token = cu.decode_data('resources/mapbox_token')
+def display_parking_spots(dash_app):
+    print("Reading GeoJson Config..")
+    cu = CoordinatesUtil()
 
-maps = [go.Scattermapbox(
-    lat=[],  # []
-    lon=[],  # []
-    mode='lines',  # Determine the drawing mode for the scatter trace.
-    marker=go.scattermapbox.Marker(
-        size=4,
-        color="green",
-    ),
-    hoverinfo="text",
-    hoverlabel=dict(
-        bgcolor="white",
-        font_size=10
-    ),
-    visible=True
-)]
+    # mapbox token
+    mapbox_access_token = cu.decode_data('resources/mapbox_token')
 
-# Seattle latitude and longitude values
-latitude = 47.620506
-longitude = -122.349274
+    maps = [go.Scattermapbox(
+        lat=[],  # []
+        lon=[],  # []
+        mode='lines',  # Determine the drawing mode for the scatter trace.
+        marker=go.scattermapbox.Marker(
+            size=4,
+            color="green",
+        ),
+        hoverinfo="text",
+        hoverlabel=dict(
+            bgcolor="white",
+            font_size=10
+        ),
+        visible=True
+    )]
 
-# Set up the map layout
-layout = go.Layout(
-    margin=dict(
-        l=0,  # left margin
-        r=20,  # right margin
-        b=20,  # bottom margin
-        t=50,  # top margin
-    ),
+    # Seattle latitude and longitude values
+    latitude = 47.620506
+    longitude = -122.349274
 
-    mapbox1=dict(
-        domain={'x': [0.1, 1], 'y': [0, 1]},
-        center=dict(lat=latitude, lon=longitude),
-        accesstoken=mapbox_access_token,
-        zoom=11,
-    ),
+    # Set up the map layout
+    layout = go.Layout(
+        margin=dict(
+            l=0,  # left margin
+            r=20,  # right margin
+            b=20,  # bottom margin
+            t=50,  # top margin
+        ),
 
-    xaxis2={
-        'zeroline': False,
-        "showline": False,
-        "showticklabels": True,
-        'showgrid': False,
-        'domain': [0, 1],
-        'side': 'left',
-        'anchor': 'x2',
-    },
-    yaxis2={
-        'domain': [0, 1],
-        'anchor': 'y2',
-        'autorange': 'reversed',
-    },
-    paper_bgcolor='rgb(255, 255, 255)',
-    plot_bgcolor='rgb(204, 204, 204)'
-)
+        mapbox1=dict(
+            domain={'x': [0.1, 1], 'y': [0, 1]},
+            center=dict(lat=latitude, lon=longitude),
+            accesstoken=mapbox_access_token,
+            zoom=11,
+        ),
 
-# plotly.graph_objects.Figure: Create and add a new annotation to the figure's layout.
-fig = go.Figure(data=maps, layout=layout)
-#####################################################################
-# This is the part to initiate Dash app
+        xaxis2={
+            'zeroline': False,
+            "showline": False,
+            "showticklabels": True,
+            'showgrid': False,
+            'domain': [0, 1],
+            'side': 'left',
+            'anchor': 'x2',
+        },
+        yaxis2={
+            'domain': [0, 1],
+            'anchor': 'y2',
+            'autorange': 'reversed',
+        },
+        paper_bgcolor='rgb(255, 255, 255)',
+        plot_bgcolor='rgb(204, 204, 204)'
+    )
 
-app = dash.Dash(__name__)
+    # plotly.graph_objects.Figure: Create and add a new annotation to the figure's layout.
+    fig = go.Figure(data=maps, layout=layout)
+    #####################################################################
+    # This is the part to initiate Dash app
 
-app.layout = html.Div(children=[
-    # html.H1: title
-    html.Div(html.H1("Seattle Parking"), style={'text-align': 'center', 'color': 'blue'}),
-    html.Div(children=[
+    # app = dash.Dash(__name__)
+
+    dash_app.layout = html.Div(children=[
+        # html.H1: title
+        html.Div(html.H1("Seattle Parking"), style={'text-align': 'center', 'color': 'blue'}),
         html.Div(children=[
             html.Div(children=[
-                dcc.Input(
-                    id='destination',
-                    type='text',
-                    placeholder="Destination?".format("text"),
-                    debounce=True,
-                    # spellCheck=True,
-                    autoComplete="on",
-                    inputMode='latin',
-                    name='text',
-                    autoFocus=True,
-                ),
-                html.Br(),  # break lines
-                html.Br(),
-                dcc.Input(
-                    id='accept_distance',
-                    type='text',
-                    # value=0.5,
-                    placeholder="Acceptable Distance (mi)".format("text"),
-                    pattern=r"^[0-9]\d*(\.\d+)?$",  # Regex: checks for integer, decimal.
-                    debounce=True,
-                    autoComplete="on",
-                    inputMode='latin',
-                    name='text',
-                    autoFocus=True,
-                ),
-                html.Br(),
-                html.Br(),
-                html.Button('Submit', id='submit', n_clicks=0),
-                html.Div([
-                    html.P(id="error", children=[""])  # Children as init updates the paragraph (html.P) at runtime.
+                html.Div(children=[
+                    dcc.Input(
+                        id='destination',
+                        type='text',
+                        placeholder="Destination?".format("text"),
+                        debounce=True,
+                        # spellCheck=True,
+                        autoComplete="on",
+                        inputMode='latin',
+                        name='text',
+                        autoFocus=True,
+                    ),
+                    html.Br(),  # break lines
+                    html.Br(),
+                    dcc.Input(
+                        id='accept_distance',
+                        type='text',
+                        # value=0.5,
+                        placeholder="Acceptable Distance (mi)".format("text"),
+                        pattern=r"^[0-9]\d*(\.\d+)?$",  # Regex: checks for integer, decimal.
+                        debounce=True,
+                        autoComplete="on",
+                        inputMode='latin',
+                        name='text',
+                        autoFocus=True,
+                    ),
+                    html.Br(),
+                    html.Br(),
+                    html.Button('Submit', id='submit', n_clicks=0),
+                    html.Div([
+                        html.P(id="error", children=[""])  # Children as init updates the paragraph (html.P) at runtime.
+                    ],
+                        style={'height': '30px', 'color': 'red'}
+                    )
                 ],
-                    style={'height': '30px', 'color': 'red'}
+                    style={'height': '400px', 'text-align': 'center', 'display': 'inline-block'}),
+            ]
+                , style={'width': '20%', 'display': 'inline-block', 'text-align': 'center', 'vertical-align': 'top',
+                         'margin-top': '100px', 'margin-left': '150px'}
+            ),
+            html.Div(
+                dcc.Graph(
+                    id='seattle_street_map',
+                    figure=fig,
+                    style={"height": "95vh", "margin-top": "-20px"},
+                    config={
+                        'displayModeBar': False  # removes map options from dcc graph
+                    }
                 )
-            ],
-                style={'height': '400px', 'text-align': 'center', 'display': 'inline-block'}),
+                , style={'width': '70%', 'display': 'inline-block', 'margin-right': '-20vh'}
+            ),
         ]
-            , style={'width': '20%', 'display': 'inline-block', 'text-align': 'center', 'vertical-align': 'top',
-                     'margin-top': '100px', 'margin-left': '150px'}
+            , style={'width': '100%', 'display': 'inline-block'}
         ),
-        html.Div(
-            dcc.Graph(
-                id='seattle_street_map',
-                figure=fig,
-                style={"height": "95vh", "margin-top": "-20px"},
-                config={
-                    'displayModeBar': False  # removes map options from dcc graph
-                }
-            )
-            , style={'width': '70%', 'display': 'inline-block', 'margin-right': '-20vh'}
-        ),
+
+        html.Div(children='''
+            Data source from Seattle GIS Gov
+        ''')
     ]
-        , style={'width': '100%', 'display': 'inline-block'}
-    ),
+    )
 
-    html.Div(children='''
-        Data source from Seattle GIS Gov
-    ''')
-]
-)
+    # ------------------------------------------------------------------------
+    # By writing this decorator, we're telling Dash to call this function for us whenever the value of the "input"
+    # component (the text box) changes in order to update the children of the "output" component on the page
+    # (the HTML div)
+    # Whenever an input property changes, the function that the callback decorator wraps will get called automatically.
+    # Dash provides the function with the new value of the input property as an input argument and
+    # Dash updates the property of the output component with whatever was returned by the function.
+
+    @dash_app.callback(
+        Output(component_id='seattle_street_map', component_property='figure'),  # The updated streets are passed to
+        # this component_ID: seattle_street_map, which updates the map with the recommended streets
+        Output("error", "children"),
+        [Input(component_id='submit', component_property='n_clicks')],  # component_property: the type of input field
+        state=[State(component_id='destination', component_property='value'),
+               State(component_id='accept_distance', component_property='value')]
+    )
+    def submit_data(n_clicks, destination, accept_distance):
+        return create_parking_spots(n_clicks, destination, accept_distance, layout, cu)
 
 
-# ------------------------------------------------------------------------
-# By writing this decorator, we're telling Dash to call this function for us whenever the value of the "input"
-# component (the text box) changes in order to update the children of the "output" component on the page
-# (the HTML div)
-# Whenever an input property changes, the function that the callback decorator wraps will get called automatically.
-# Dash provides the function with the new value of the input property as an input argument and
-# Dash updates the property of the output component with whatever was returned by the function.
-
-
-@app.callback(
-    Output(component_id='seattle_street_map', component_property='figure'),  # The updated streets are passed to
-    # this component_ID: seattle_street_map, which updates the map with the recommended streets
-    Output("error", "children"),
-    [Input(component_id='submit', component_property='n_clicks')],  # component_property: the type of input field
-    state=[State(component_id='destination', component_property='value'),
-           State(component_id='accept_distance', component_property='value')]
-)
-def submit_data(n_clicks, destination, accept_distance):
+def create_parking_spots(n_clicks, destination, accept_distance, layout, cu):
     """
     This function refreshes the map when the submit button is clicked with user input destination address and
     acceptable distance.
@@ -182,7 +187,7 @@ def submit_data(n_clicks, destination, accept_distance):
         if n_clicks > 0:
             top_spots_on_map = []
             spots, destination_coordinates = cu.get_parking_spots(destination, accept_distance)
-            if not destination_coordinates:
+            if not destination_coordinates or not spots or len(spots) == 0:
                 return {
                            "data": [
                                {
@@ -295,4 +300,6 @@ def submit_data(n_clicks, destination, accept_distance):
 # ------------------------------------------------------------------------
 
 if __name__ == '__main__':
+    app = dash.Dash(__name__)
+    display_parking_spots(app)
     app.run_server(debug=False)
