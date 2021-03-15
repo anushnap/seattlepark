@@ -123,9 +123,6 @@ class TestRecommend(unittest.TestCase):
             [self.test_ps1, self.test_ps2], '2021-01-01 12:00:00'
         )
 
-    def test_recommend_raises_exception(self):
-        pass
-
     def test_recommend(self):
         return_list = self.test_pr.recommend()
         self.assertEqual(
@@ -136,6 +133,36 @@ class TestRecommend(unittest.TestCase):
             return_list[1].street_name,
             self.test_ps2.street_name
         )
+
+    def test_recommend_raises_exception(self):
+        """check that recommend() returns the 5 closest if no data within
+        +/- 1 hour of desired time"""
+        # the 5 closest in this list are inp_list[1:]
+        inp_list = [
+            ParkingSpot(10, [[1, 3], [2, 4]],
+                        '12TH AVE BETWEEN E SPRING ST AND E MADISON ST',
+                        1, 1),
+            ParkingSpot(1, [[1, 3], [2, 4]],
+                        '12TH AVE BETWEEN E CHERRY ST AND E COLUMBIA ST',
+                        1, 1),
+            ParkingSpot(1, [[1, 3], [2, 4]],
+                        '12TH AVE BETWEEN E COLUMBIA ST AND E MARION ST',
+                        1, 1),
+            ParkingSpot(1, [[1, 3], [2, 4]],
+                        '12TH AVE BETWEEN E JAMES CT AND E CHERRY ST',
+                        1, 1),
+            ParkingSpot(1, [[1, 3], [2, 4]],
+                        '12TH AVE BETWEEN E JEFFERSON ST AND E BARCLAY CT',
+                        1, 1),
+            ParkingSpot(1, [[1, 3], [2, 4]],
+                        '12TH AVE BETWEEN E MARION ST AND E SPRING ST',
+                        1, 1)
+        ]
+        # We know there are no observations between 00:00 and 08:00
+        # so it should just return the 5 closest
+        test_pr2 = ParkingRecommender(inp_list, '2021-01-01 04:00:00')
+        return_list = test_pr2.recommend()
+        self.assertEqual(return_list, inp_list[1:])
 
 
 if __name__ == "__main__":
