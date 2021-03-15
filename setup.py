@@ -7,5 +7,6 @@ setup(
     version='0.1.0',
     packages=find_packages(),
     description="edit later",
-    requires=REQUIRES
+    requires=REQUIRES,
+    python_requires='>3.7'
 )
