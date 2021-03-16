@@ -7,7 +7,11 @@ from dash.dependencies import Input, Output, State
 
 from coordinates_util import CoordinatesUtil
 
+app = dash.Dash(__name__)
 server = app.server
+display_parking_spots(app)
+
+
 
 def display_parking_spots(dash_app):
     """
