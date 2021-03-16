@@ -1,6 +1,4 @@
 [![Build Status](https://travis-ci.org/anushnap/seattlepark.svg?branch=main)](https://travis-ci.org/anushnap/seattlepark)
-# README
-
 ## seattlepark
 
 Finding parking in the Seattle area can sometimes be an arduous task.  Free street parking is difficult to find, can be on narrow streets, and time-limited in residential zones often to 2 hours. Paid street parking is often just as difficult to find.
