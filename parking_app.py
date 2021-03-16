@@ -7,9 +7,8 @@ from dash.dependencies import Input, Output, State
 
 from coordinates_util import CoordinatesUtil
 
-#Create server
+#Initialize app and create server
 app = dash.Dash(__name__)
-server = app.server
 
 def display_parking_spots(dash_app):
     """
@@ -86,8 +85,6 @@ def display_parking_spots(dash_app):
     )
 
     fig = go.Figure(data=maps, layout=layout)
-
-    dash_app = dash.Dash(__name__)
 
     dash_app.layout = html.Div(children=[
         html.Div(html.H1("Seattle Parking"), style={'text-align': 'center',
@@ -337,6 +334,7 @@ def create_parking_spots(n_clicks, destination, accept_distance, layout, cu):
                    "layout": layout
                }, ""
 
+server = app.server
 
 # ------------------------------------------------------------------------
 
