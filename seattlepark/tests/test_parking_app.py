@@ -10,7 +10,6 @@ class StreetParkingUITest(unittest.TestCase):
         n_clicks = 1
         destination = "Street0"
         accept_distance = "0.2"
-        layout = Mock()
         cu = Mock()
 
         distance = 0.5
@@ -36,7 +35,7 @@ class StreetParkingUITest(unittest.TestCase):
 
         streets, notification = \
             create_parking_spots(n_clicks,
-                                 destination, accept_distance, layout, cu)
+                                 destination, accept_distance, cu)
 
         data = streets["data"]
         lat1 = data[0]["lat"]
@@ -55,12 +54,11 @@ class StreetParkingUITest(unittest.TestCase):
         n_clicks = 0
         destination = "I love sushi seattle"
         accept_distance = "0.2"
-        layout = Mock()
         cu = Mock()
 
         streets, notification = \
             create_parking_spots(n_clicks,
-                                 destination, accept_distance, layout, cu)
+                                 destination, accept_distance, cu)
         data = streets["data"]
         lat = data[0]["lat"]
         lon = data[0]["lon"]
@@ -70,7 +68,6 @@ class StreetParkingUITest(unittest.TestCase):
         n_clicks = 1
         destination = "I love sushi seattle"
         accept_distance = "0.2"
-        layout = Mock()
         cu = Mock()
 
         distance = 0.5
@@ -96,7 +93,7 @@ class StreetParkingUITest(unittest.TestCase):
 
         streets, notification = \
             create_parking_spots(n_clicks,
-                                 destination, accept_distance, layout, cu)
+                                 destination, accept_distance, cu)
 
         data = streets["data"]
         lat = data[0]["lat"]
@@ -107,7 +104,6 @@ class StreetParkingUITest(unittest.TestCase):
         n_clicks = 1
         destination = "I love sushi seattle"
         accept_distance = "0.2"
-        layout = Mock()
         cu = Mock()
 
         spots = None
@@ -117,7 +113,7 @@ class StreetParkingUITest(unittest.TestCase):
 
         streets, notification = \
             create_parking_spots(n_clicks,
-                                 destination, accept_distance, layout, cu)
+                                 destination, accept_distance, cu)
 
         data = streets["data"]
         lat = data[0]["lat"]
@@ -128,7 +124,6 @@ class StreetParkingUITest(unittest.TestCase):
         n_clicks = 1
         destination = "I love sushi seattle"
         accept_distance = "0.2"
-        layout = Mock()
         cu = Mock()
 
         spots = []
@@ -138,7 +133,7 @@ class StreetParkingUITest(unittest.TestCase):
 
         streets, notification = \
             create_parking_spots(n_clicks,
-                                 destination, accept_distance, layout, cu)
+                                 destination, accept_distance, cu)
 
         data = streets["data"]
         lat = data[0]["lat"]

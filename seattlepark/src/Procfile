@@ -1,1 +1,1 @@
-web: gunicorn sea_street_parking_line:server
+web: gunicorn parking_app:server
