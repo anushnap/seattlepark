@@ -12,6 +12,7 @@ The MIT License is a permissive free software license originating at the Massach
 ## Project Organization
 
 The project structure is as follows:
+```bash
 .
 ├── ./LICENSE
 ├── ./README.md
@@ -41,7 +42,7 @@ The project structure is as follows:
 │       ├── ./seattlepark/tests/test_parking_recommender.py
 │       └── ./seattlepark/tests/test_parking_spot.py
 └── ./setup.py
-
+```
 ## Installation
 
 To install seattlepark package, open terminal/command prompt and cd into local git repo and clone the package to your computer using the following command:
