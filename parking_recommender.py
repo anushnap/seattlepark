@@ -74,9 +74,8 @@ class ParkingRecommender:
         filepath = os.path.join(
                 # os.path.dirname(__file__),
                 # "../data/Annual_Parking_Study_Data_Cleaned2.csv"
-
-                 os.path.dirname(__file__),
-                 "resources/Annual_Parking_Study_Data_Cleaned2.csv")
+                os.path.dirname(__file__),
+                "resources/Annual_Parking_Study_Data_Cleaned2.csv")
                 )
 
 
