@@ -9,150 +9,151 @@ from coordinates_util import CoordinatesUtil
 
 #Initialize app and create server
 app = dash.Dash(__name__)
+server = app.server
 
-def display_parking_spots(dash_app):
-    """
-    This is to display the recommended parking streets on the Dash map.
+#def display_parking_spots(dash_app):
+"""
+This is to display the recommended parking streets on the Dash map.
 
-    Parameters
-    ----------
-    dash_app: object
-        create the Dash app.
+Parameters
+----------
+dash_app: object
+    create the Dash app.
 
-    Returns
-    -------
-    JSON
-        recommended parking spots to be marked on the scatter mapbox.
-    """
-    print("Reading GeoJson Config..")
-    cu = CoordinatesUtil()
+Returns
+-------
+JSON
+    recommended parking spots to be marked on the scatter mapbox.
+"""
+print("Reading GeoJson Config..")
+cu = CoordinatesUtil()
 
-    # mapbox token
-    mapbox_access_token = cu.decode_data('resources/mapbox_token')
+# mapbox token
+mapbox_access_token = cu.decode_data('resources/mapbox_token')
 
-    maps = [go.Scattermapbox(
-        lat=[],  # []
-        lon=[],  # []
-        mode='lines',  # Determine the drawing mode for the scatter trace.
-        marker=go.scattermapbox.Marker(
-            size=4,
-            color="green",
-        ),
-        hoverinfo="text",
-        hoverlabel=dict(
-            bgcolor="white",
-            font_size=10
-        ),
-        visible=True
-    )]
+maps = [go.Scattermapbox(
+    lat=[],  # []
+    lon=[],  # []
+    mode='lines',  # Determine the drawing mode for the scatter trace.
+    marker=go.scattermapbox.Marker(
+        size=4,
+        color="green",
+    ),
+    hoverinfo="text",
+    hoverlabel=dict(
+        bgcolor="white",
+        font_size=10
+    ),
+    visible=True
+)]
 
-    # Seattle latitude and longitude values
-    latitude = 47.620506
-    longitude = -122.349274
+# Seattle latitude and longitude values
+latitude = 47.620506
+longitude = -122.349274
 
-    # Set up the map layout
-    layout = go.Layout(
-        margin=dict(
-            l=0,  # left margin
-            r=20,  # right margin
-            b=20,  # bottom margin
-            t=50,  # top margin
-        ),
+# Set up the map layout
+layout = go.Layout(
+    margin=dict(
+        l=0,  # left margin
+        r=20,  # right margin
+        b=20,  # bottom margin
+        t=50,  # top margin
+    ),
 
-        mapbox1=dict(
-            domain={'x': [0.1, 1], 'y': [0, 1]},
-            center=dict(lat=latitude, lon=longitude),
-            accesstoken=mapbox_access_token,
-            zoom=11,
-        ),
+    mapbox1=dict(
+        domain={'x': [0.1, 1], 'y': [0, 1]},
+        center=dict(lat=latitude, lon=longitude),
+        accesstoken=mapbox_access_token,
+        zoom=11,
+    ),
 
-        xaxis2={
-            'zeroline': False,
-            "showline": False,
-            "showticklabels": True,
-            'showgrid': False,
-            'domain': [0, 1],
-            'side': 'left',
-            'anchor': 'x2',
-        },
-        yaxis2={
-            'domain': [0, 1],
-            'anchor': 'y2',
-            'autorange': 'reversed',
-        },
-        paper_bgcolor='rgb(255, 255, 255)',
-        plot_bgcolor='rgb(204, 204, 204)'
-    )
+    xaxis2={
+        'zeroline': False,
+        "showline": False,
+        "showticklabels": True,
+        'showgrid': False,
+        'domain': [0, 1],
+        'side': 'left',
+        'anchor': 'x2',
+    },
+    yaxis2={
+        'domain': [0, 1],
+        'anchor': 'y2',
+        'autorange': 'reversed',
+    },
+    paper_bgcolor='rgb(255, 255, 255)',
+    plot_bgcolor='rgb(204, 204, 204)'
+)
 
-    fig = go.Figure(data=maps, layout=layout)
+fig = go.Figure(data=maps, layout=layout)
 
-    dash_app.layout = html.Div(children=[
-        html.Div(html.H1("Seattle Parking"), style={'text-align': 'center',
-                                                    'color': 'blue'}),
+app.layout = html.Div(children=[
+    html.Div(html.H1("Seattle Parking"), style={'text-align': 'center',
+                                                'color': 'blue'}),
+    html.Div(children=[
         html.Div(children=[
             html.Div(children=[
-                html.Div(children=[
-                    dcc.Input(
-                        id='destination',
-                        type='text',
-                        placeholder="Destination?",
-                        debounce=True,
-                        autoComplete="on",
-                        inputMode='latin',
-                        name='text',
-                        autoFocus=True,
-                    ),
-                    html.Br(),  # break lines
-                    html.Br(),
-                    dcc.Input(
-                        id='accept_distance',
-                        type='text',
-                        # value=0.5,
-                        placeholder="Acceptable Distance (mi)",
-                        pattern=r"^[0-9]\d*(\.\d+)?$",
-                        debounce=True,
-                        autoComplete="on",
-                        inputMode='latin',
-                        name='text',
-                        autoFocus=True,
-                    ),
-                    html.Br(),
-                    html.Br(),
-                    html.Button('Submit', id='submit', n_clicks=0),
-                    html.Div([
-                        html.P(id="error", children=[""])
-                    ],
-                        style={'height': '30px', 'color': 'red'}
-                    )
-                ],
-                    style={'height': '400px', 'text-align': 'center',
-                           'display': 'inline-block'}),
-            ],
-                style={'width': '20%', 'display': 'inline-block',
-                       'text-align': 'center', 'vertical-align': 'top',
-                       'margin-top': '100px', 'margin-left': '150px'}
-            ),
-            html.Div(
-                dcc.Graph(
-                    id='seattle_street_map',
-                    figure=fig,
-                    style={"height": "95vh", "margin-top": "-20px"},
-                    config={
-                        'displayModeBar': False
-                    }
+                dcc.Input(
+                    id='destination',
+                    type='text',
+                    placeholder="Destination?",
+                    debounce=True,
+                    autoComplete="on",
+                    inputMode='latin',
+                    name='text',
+                    autoFocus=True,
                 ),
-                style={'width': '70%', 'display': 'inline-block',
-                       'margin-right': '-20vh'}
-            ),
+                html.Br(),  # break lines
+                html.Br(),
+                dcc.Input(
+                    id='accept_distance',
+                    type='text',
+                    # value=0.5,
+                    placeholder="Acceptable Distance (mi)",
+                    pattern=r"^[0-9]\d*(\.\d+)?$",
+                    debounce=True,
+                    autoComplete="on",
+                    inputMode='latin',
+                    name='text',
+                    autoFocus=True,
+                ),
+                html.Br(),
+                html.Br(),
+                html.Button('Submit', id='submit', n_clicks=0),
+                html.Div([
+                    html.P(id="error", children=[""])
+                ],
+                    style={'height': '30px', 'color': 'red'}
+                )
+            ],
+                style={'height': '400px', 'text-align': 'center',
+                       'display': 'inline-block'}),
         ],
-            style={'width': '100%', 'display': 'inline-block'}
+            style={'width': '20%', 'display': 'inline-block',
+                   'text-align': 'center', 'vertical-align': 'top',
+                   'margin-top': '100px', 'margin-left': '150px'}
         ),
+        html.Div(
+            dcc.Graph(
+                id='seattle_street_map',
+                figure=fig,
+                style={"height": "95vh", "margin-top": "-20px"},
+                config={
+                    'displayModeBar': False
+                }
+            ),
+            style={'width': '70%', 'display': 'inline-block',
+                   'margin-right': '-20vh'}
+        ),
+    ],
+        style={'width': '100%', 'display': 'inline-block'}
+    ),
 
-        html.Div(children='''
-            Data source from Seattle GIS Gov
-        ''')
-    ]
-    )
+    html.Div(children='''
+        Data source from Seattle GIS Gov
+    ''')
+]
+)
 
     # ------------------------------------------------------------------------
     # By writing this decorator, we're telling Dash to call this function for
@@ -164,7 +165,7 @@ def display_parking_spots(dash_app):
     # input argument and Dash updates the property of the output component
     # with whatever was returned by the function.
 
-    @dash_app.callback(
+    @app.callback(
         Output(component_id='seattle_street_map',
                component_property='figure'),
         Output("error", "children"),
@@ -333,8 +334,6 @@ def create_parking_spots(n_clicks, destination, accept_distance, layout, cu):
                    ],
                    "layout": layout
                }, ""
-
-server = app.server
 
 # ------------------------------------------------------------------------
 
