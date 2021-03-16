@@ -6,3 +6,5 @@ src/__pycache__
 */__pycache__/*
 seattlepark.egg-info/
 seattlepark/src/histogram.py
+build/
+dist/
