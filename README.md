@@ -42,6 +42,8 @@ Once all dependencies are installed, open and run the python file "parking_app.p
 python seattlepark/src/parking_app.py
 ```
 
+You should now have a local server that you can run in a browser.
+
 ## Using the seattlepark app
 
 Once you have the app set up and running, you're ready to take advantage of its functions. 
