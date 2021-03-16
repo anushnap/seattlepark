@@ -107,8 +107,9 @@ class TestParkingRecommender(unittest.TestCase):
 class TestRecommend(unittest.TestCase):
     def setUp(self):
         self.filepath = \
-            os.path.join(os.path.dirname(__file__),
-                         "../src/resources/Annual_Parking_Study_Data_Cleaned2.csv")
+            os.path.join(
+                os.path.dirname(__file__),
+                "../src/resources/Annual_Parking_Study_Data_Cleaned2.csv")
         self.test_df = pd.read_csv(self.filepath, low_memory=False)
         self.test_ps1 = ParkingSpot(
             1, [[1, 3], [2, 4]],
