@@ -73,7 +73,7 @@ class ParkingRecommender:
 
         filepath = os.path.join(
                 os.path.dirname(__file__),
-                "../data/Annual_Parking_Study_Data_Cleaned2.csv"
+                "../src/resources/Annual_Parking_Study_Data_Cleaned2.csv"
                 )
 
         # Import the dataset
