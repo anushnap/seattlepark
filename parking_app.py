@@ -165,18 +165,18 @@ app.layout = html.Div(children=[
     # input argument and Dash updates the property of the output component
     # with whatever was returned by the function.
 
-    @app.callback(
-        Output(component_id='seattle_street_map',
-               component_property='figure'),
-        Output("error", "children"),
-        [Input(component_id='submit', component_property='n_clicks')],
-        state=[State(component_id='destination', component_property='value'),
-               State(component_id='accept_distance',
-                     component_property='value')]
-    )
-    def submit_data(n_clicks, destination, accept_distance):
-        return create_parking_spots(n_clicks, destination, accept_distance,
-                                    layout, cu)
+@app.callback(
+    Output(component_id='seattle_street_map',
+           component_property='figure'),
+    Output("error", "children"),
+    [Input(component_id='submit', component_property='n_clicks')],
+    state=[State(component_id='destination', component_property='value'),
+           State(component_id='accept_distance',
+                 component_property='value')]
+)
+def submit_data(n_clicks, destination, accept_distance):
+    return create_parking_spots(n_clicks, destination, accept_distance,
+                                layout, cu)
 
 
 def create_parking_spots(n_clicks, destination, accept_distance, layout, cu):
@@ -339,5 +339,5 @@ def create_parking_spots(n_clicks, destination, accept_distance, layout, cu):
 
 if __name__ == '__main__':
     #app = dash.Dash(__name__)
-    display_parking_spots(app)
+    #display_parking_spots(app)
     app.run_server(debug=False)
