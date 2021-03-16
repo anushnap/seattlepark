@@ -95,7 +95,7 @@ class CoordinatesUtilTest(unittest.TestCase):
         """Test validity of key, value pairs of coordinates_mapping"""
         filepath = os.path.join(
                 os.path.dirname(__file__),
-                '../src/resources/Annual_Parking_Study_Data_Cleaned2.csv')
+                'data/Annual_Parking_Study_Data_Cleaned2.csv')
         parking_data = pd.read_csv(filepath, low_memory=False)
         streets = parking_data['Unitdesc'].unique()
         coordinates_mapping = self.cu.sea_parking_geocode()

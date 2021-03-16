@@ -72,9 +72,8 @@ class ParkingRecommender:
             street_names.append(st.street_name)
 
         filepath = os.path.join(
-                os.path.dirname(__file__),
-                "../src/resources/Annual_Parking_Study_Data_Cleaned2.csv"
-                )
+            os.path.dirname(__file__),
+            "resources/Annual_Parking_Study_Data_Cleaned2.csv")
 
         # Import the dataset
         df = pd.read_csv(filepath, low_memory=False)

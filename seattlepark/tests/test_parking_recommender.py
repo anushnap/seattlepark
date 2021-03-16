@@ -17,7 +17,7 @@ class TestParkingRecommender(unittest.TestCase):
         """
         self.filepath = os.path.join(
             os.path.dirname(__file__),
-            "../src/resources/Annual_Parking_Study_Data_Cleaned2.csv")
+            "data/Annual_Parking_Study_Data_Cleaned2.csv")
         self.test_df = pd.read_csv(self.filepath, low_memory=False)
         self.test_street = 'DEXTER AVE N BETWEEN WARD ST AND PROSPECT ST'
         self.test_ps = ParkingSpot(0, 0, self.test_street, 0, 0)
@@ -109,7 +109,7 @@ class TestRecommend(unittest.TestCase):
         self.filepath = \
             os.path.join(
                 os.path.dirname(__file__),
-                "../src/resources/Annual_Parking_Study_Data_Cleaned2.csv")
+                "data/Annual_Parking_Study_Data_Cleaned2.csv")
         self.test_df = pd.read_csv(self.filepath, low_memory=False)
         self.test_ps1 = ParkingSpot(
             1, [[1, 3], [2, 4]],
