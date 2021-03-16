@@ -9,8 +9,6 @@ from coordinates_util import CoordinatesUtil
 
 app = dash.Dash(__name__)
 server = app.server
-display_parking_spots(app)
-
 
 
 def display_parking_spots(dash_app):
@@ -341,6 +339,6 @@ def create_parking_spots(n_clicks, destination, accept_distance, layout, cu):
 # ------------------------------------------------------------------------
 
 if __name__ == '__main__':
-    app = dash.Dash(__name__)
+    #app = dash.Dash(__name__)
     display_parking_spots(app)
     app.run_server(debug=False)
