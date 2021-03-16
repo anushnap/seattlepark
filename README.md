@@ -12,8 +12,35 @@ The MIT License is a permissive free software license originating at the Massach
 ## Project Organization
 
 The project structure is as follows:
-
-[INSERT IMAGE]
+.
+├── ./LICENSE
+├── ./README.md
+├── ./requirements.txt
+├── ./seattlepark
+│   ├── ./seattlepark/__init__.py
+│   ├── ./seattlepark/src
+│   │   ├── ./seattlepark/src/Procfile
+│   │   ├── ./seattlepark/src/__init__.py
+│   │   ├── ./seattlepark/src/coordinates_util.py
+│   │   ├── ./seattlepark/src/parking_app.py
+│   │   ├── ./seattlepark/src/parking_recommender.py
+│   │   ├── ./seattlepark/src/parking_spot.py
+│   │   ├── ./seattlepark/src/requirements.txt
+│   │   └── ./seattlepark/src/resources
+│   │       ├── ./seattlepark/src/resources/Annual_Parking_Study_Data_Cleaned2.csv
+│   │       ├── ./seattlepark/src/resources/Midpoints_and_LineCoords.json
+│   │       ├── ./seattlepark/src/resources/google_map_api.key
+│   │       └── ./seattlepark/src/resources/mapbox_token
+│   └── ./seattlepark/tests
+│       ├── ./seattlepark/tests/__init__.py
+│       ├── ./seattlepark/tests/data
+│       │   ├── ./seattlepark/tests/data/Annual_Parking_Study_Data_Cleaned2.csv
+│       │   └── ./seattlepark/tests/data/test_key.key
+│       ├── ./seattlepark/tests/test_coordinates_util.py
+│       ├── ./seattlepark/tests/test_parking_app.py
+│       ├── ./seattlepark/tests/test_parking_recommender.py
+│       └── ./seattlepark/tests/test_parking_spot.py
+└── ./setup.py
 
 ## Installation
 
