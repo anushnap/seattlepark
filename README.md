@@ -70,7 +70,12 @@ Once all dependencies are installed, open and run the python file "parking_app.p
 python seattlepark/src/parking_app.py
 ```
 
-You should now have a local server that you can run in a browser.
+You should get output that looks similar to this:
+```bash
+ * Debug mode: off
+ * Running on http://127.0.0.1:8050/ (Press CTRL+C to quit)
+```
+Copy and paste the link into your browser to interact with the API.
 
 ## Using the seattlepark app
 
