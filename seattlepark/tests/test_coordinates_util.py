@@ -130,7 +130,6 @@ class CoordinatesUtilTest(unittest.TestCase):
             self.cu.get_destination_coordinates(self.uw_suzallo_address)
         )
 
-    # SHOULD I TEST THIS? THIS BASICALLY ENDS UP DOING THE EXACT SAME CODE....
     def test_decode_data(self):
         path = os.path.join(os.path.dirname(__file__), "data/test_key.key")
         key = self.cu.decode_data("../tests/data/test_key.key")
