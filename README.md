@@ -20,13 +20,11 @@ The project structure is as follows:
 ├── ./seattlepark
 │   ├── ./seattlepark/__init__.py
 │   ├── ./seattlepark/src
-│   │   ├── ./seattlepark/src/Procfile
 │   │   ├── ./seattlepark/src/__init__.py
 │   │   ├── ./seattlepark/src/coordinates_util.py
 │   │   ├── ./seattlepark/src/parking_app.py
 │   │   ├── ./seattlepark/src/parking_recommender.py
 │   │   ├── ./seattlepark/src/parking_spot.py
-│   │   ├── ./seattlepark/src/requirements.txt
 │   │   └── ./seattlepark/src/resources
 │   │       ├── ./seattlepark/src/resources/Annual_Parking_Study_Data_Cleaned2.csv
 │   │       ├── ./seattlepark/src/resources/Midpoints_and_LineCoords.json
@@ -63,6 +61,8 @@ Then set up your development environment using the following command:
 ```bash
 pip install -r requirements.txt
 ```
+#### Note for users after March 21, 2021
+The API key that is currently encoded in this repository will be deactivated after March 21, 2021. New users will need to [create their own API key](https://developers.google.com/maps/documentation/embed/get-api-key), encode it, and paste it in to ./seattlepark/src/resources/google_maps_api.key . (https://developers.google.com/maps/documentation/embed/get-api-key)
 
 Once all dependencies are installed, open and run the python file "parking_app.py" in the src directory:
 
