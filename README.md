@@ -62,7 +62,7 @@ Then set up your development environment using the following command:
 pip install -r requirements.txt
 ```
 #### Note for users after March 21, 2021
-The API key that is currently encoded in this repository will be deactivated after March 21, 2021. New users will need to [create their own API key](https://developers.google.com/maps/documentation/embed/get-api-key), encode it, and paste it in to ./seattlepark/src/resources/google_maps_api.key . (https://developers.google.com/maps/documentation/embed/get-api-key)
+The API key that is currently encoded in this repository will be deactivated after March 21, 2021. New users will need to [create their own API key](https://developers.google.com/maps/documentation/embed/get-api-key), encode it, and paste it in to ./seattlepark/src/resources/google_maps_api.key .
 
 Once all dependencies are installed, open and run the python file "parking_app.py" in the src directory:
 
