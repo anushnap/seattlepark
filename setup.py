@@ -6,7 +6,7 @@ setup(
     name='seattlepark',
     version='0.1.0',
     packages=find_packages(),
-    description="Create a parking recommender for Seattle, WA",
+    description="Seattlepark recommends street parking for a user-specified destination within a given radius",
     requires=REQUIRES,
     python_requires='>3.7'
 )
